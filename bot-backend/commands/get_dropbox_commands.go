@@ -10,11 +10,28 @@ func GetDropboxCommands(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
 
 		// Get all Dropbox related commands
 		commands := GetCommands(CATEGORY_DROPBOX)
+
+		// add inline keyboard
+		kb := NewInlineKeyboard()
+		buttonData := make([]KeyboardButtonData, len(commands))
+		buttonIndex := 0
+
 		for command, info := range commands {
 			reply += GetCommandOneLinerDesc(command, info, true)
+			buttonData[buttonIndex] = KeyboardButtonData{
+				Label: info.InlineShortcut,
+				Data:  info.InlineShortcut,
+			}
+			buttonIndex++
 		}
 
+		reply += "\nYou can also use the emoji buttons to send commands."
+
+		kb.AddRow(buttonData...)
+
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, reply)
+		msg.ReplyMarkup = kb.Render()
+
 		SendMessage(msg, bot)
 	}
 }

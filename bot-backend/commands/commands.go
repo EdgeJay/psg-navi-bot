@@ -16,10 +16,11 @@ const (
 type CommandFunc func(update *tgbotapi.Update, bot *tgbotapi.BotAPI)
 
 type CommandInfo struct {
-	Name        string
-	Description string
-	Category    string
-	Func        CommandFunc
+	Name           string
+	Description    string
+	Category       string
+	InlineShortcut string
+	Func           CommandFunc
 }
 
 var mapping map[string]*CommandInfo
@@ -43,7 +44,10 @@ func GetCommandOneLinerDesc(command string, info *CommandInfo, addLineBreak bool
 	if addLineBreak {
 		lineBreak = "\n"
 	}
-	return fmt.Sprintf("/%s (%s) : %s%s", command, info.Name, info.Description, lineBreak)
+
+	desc := fmt.Sprintf("%s\nEmoji button: %s", info.Description, info.InlineShortcut)
+
+	return fmt.Sprintf("/%s (%s) : %s%s", command, info.Name, desc, lineBreak)
 }
 
 func GetCommands(category string) map[string]*CommandInfo {
@@ -63,22 +67,25 @@ func GetCommands(category string) map[string]*CommandInfo {
 			Func:        GetDropboxCommands,
 		}
 		mapping["makefilerequest"] = &CommandInfo{
-			Name:        "Make file request command",
-			Description: "Make a new Dropbox file request",
-			Category:    CATEGORY_DROPBOX,
-			Func:        MakeDropboxFileRequest,
+			Name:           "Make file request command",
+			Description:    "Make a new Dropbox file request",
+			Category:       CATEGORY_DROPBOX,
+			InlineShortcut: "➕",
+			Func:           MakeDropboxFileRequest,
 		}
 		mapping["listfilerequests"] = &CommandInfo{
-			Name:        "List all file requests command",
-			Description: "List all file requests",
-			Category:    CATEGORY_DROPBOX,
-			Func:        GetDropboxFileRequests,
+			Name:           "List all file requests command",
+			Description:    "List all file requests",
+			Category:       CATEGORY_DROPBOX,
+			InlineShortcut: "📃",
+			Func:           GetDropboxFileRequests,
 		}
 		mapping["getfilerequest"] = &CommandInfo{
-			Name:        "Get info on file request command",
-			Description: "Get info on a file request",
-			Category:    CATEGORY_DROPBOX,
-			Func:        GetDropboxFileRequestInfo,
+			Name:           "Get info on file request command",
+			Description:    "Get info on a file request",
+			Category:       CATEGORY_DROPBOX,
+			InlineShortcut: "🔍",
+			Func:           GetDropboxFileRequestInfo,
 		}
 	}
 
