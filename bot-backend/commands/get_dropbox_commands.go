@@ -6,7 +6,7 @@ import (
 
 func GetDropboxCommands(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
 	if update.Message != nil && update.Message.Chat != nil {
-		reply := "Hi, the following Dropbox commands are available:"
+		reply := "Hi, the following Dropbox commands are available:\n"
 
 		// Get all Dropbox related commands
 		commands := GetCommands(CATEGORY_DROPBOX)
