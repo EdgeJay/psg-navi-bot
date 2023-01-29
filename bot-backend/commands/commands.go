@@ -15,12 +15,15 @@ const (
 
 type CommandFunc func(update *tgbotapi.Update, bot *tgbotapi.BotAPI)
 
+type InlineQueryDataFunc func() string
+
 type CommandInfo struct {
-	Name           string
-	Description    string
-	Category       string
-	InlineShortcut string
-	Func           CommandFunc
+	Name            string
+	Description     string
+	Category        string
+	InlineShortcut  string
+	InlineQueryData string
+	Func            CommandFunc
 }
 
 var mapping map[string]*CommandInfo
@@ -72,25 +75,28 @@ func GetCommands(category string) map[string]*CommandInfo {
 			Func:        GetDropboxCommands,
 		}
 		mapping["makefilerequest"] = &CommandInfo{
-			Name:           "Make file request command",
-			Description:    "Make a new Dropbox file request",
-			Category:       CATEGORY_DROPBOX,
-			InlineShortcut: "➕",
-			Func:           MakeDropboxFileRequest,
+			Name:            "Make file request command",
+			Description:     "Make a new Dropbox file request",
+			Category:        CATEGORY_DROPBOX,
+			InlineShortcut:  "➕",
+			InlineQueryData: GetMakeDropboxFileRequestInlineQueryData(),
+			Func:            MakeDropboxFileRequest,
 		}
 		mapping["listfilerequests"] = &CommandInfo{
-			Name:           "List all file requests command",
-			Description:    "List all file requests",
-			Category:       CATEGORY_DROPBOX,
-			InlineShortcut: "📃",
-			Func:           GetDropboxFileRequests,
+			Name:            "List all file requests command",
+			Description:     "List all file requests",
+			Category:        CATEGORY_DROPBOX,
+			InlineShortcut:  "📃",
+			InlineQueryData: GetListDropboxFileRequestsInlineQueryData(),
+			Func:            GetDropboxFileRequests,
 		}
 		mapping["getfilerequest"] = &CommandInfo{
-			Name:           "Get info on file request command",
-			Description:    "Get info on a file request",
-			Category:       CATEGORY_DROPBOX,
-			InlineShortcut: "🔍",
-			Func:           GetDropboxFileRequestInfo,
+			Name:            "Get info on file request command",
+			Description:     "Get info on a file request",
+			Category:        CATEGORY_DROPBOX,
+			InlineShortcut:  "🔍",
+			InlineQueryData: GetDropboxFileRequestInfoInlineQueryData(),
+			Func:            GetDropboxFileRequestInfo,
 		}
 	}
 
@@ -109,6 +115,8 @@ func GetCommands(category string) map[string]*CommandInfo {
 }
 
 func GetCommandFunc(command string) CommandFunc {
+	log.Println("Received command: ", command)
+
 	commands := GetCommands(CATEGORY_ALL)
 
 	if command == "start" {

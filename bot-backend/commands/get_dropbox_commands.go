@@ -18,14 +18,17 @@ func GetDropboxCommands(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
 
 		for command, info := range commands {
 			reply += GetCommandOneLinerDesc(command, info, true)
-			buttonData[buttonIndex] = KeyboardButtonData{
-				Label: info.InlineShortcut,
-				Data:  info.InlineShortcut,
+
+			if info.InlineShortcut != "" && info.InlineQueryData != "" {
+				buttonData[buttonIndex] = KeyboardButtonData{
+					Label: info.InlineShortcut,
+					Data:  info.InlineQueryData,
+				}
+				buttonIndex++
 			}
-			buttonIndex++
 		}
 
-		reply += "\nYou can also use the emoji buttons to send commands."
+		reply += "\nYou can also use the emoji buttons below to send commands."
 
 		kb.AddRow(buttonData...)
 

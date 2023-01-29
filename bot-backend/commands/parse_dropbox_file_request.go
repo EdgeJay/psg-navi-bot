@@ -39,5 +39,11 @@ func HandleDropboxFileRequest(update *tgbotapi.Update, bot *tgbotapi.BotAPI, par
 		}
 
 		SendMessage(msg, bot)
+	} else if len(params) > 1 && params[0] == "no" {
+		msg := tgbotapi.NewMessage(
+			update.CallbackQuery.Message.Chat.ID,
+			"Sorry, I don't understand the request.",
+		)
+		SendMessage(msg, bot)
 	}
 }

@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"encoding/json"
 	"log"
 	"strings"
 
@@ -14,18 +15,29 @@ type CallbackQueryInfo struct {
 
 func ParseCallbackQuery(update *tgbotapi.Update, bot *tgbotapi.BotAPI) *CallbackQueryInfo {
 	if update.CallbackQuery != nil {
-		parts := strings.Split(update.CallbackQuery.Data, ",")
-		if len(parts) > 0 {
-			info := &CallbackQueryInfo{}
-			info.QueryType = parts[0]
-
-			if len(parts) > 1 {
-				info.Params = parts[1:]
-			} else {
-				info.Params = []string{}
+		// check if data is json string
+		if strings.Index(update.CallbackQuery.Data, "{") == 0 {
+			decoded := MakeDropboxFileRequestInlineQueryData{}
+			err := json.Unmarshal([]byte(update.CallbackQuery.Data), &decoded)
+			if err == nil {
+				info := &CallbackQueryInfo{}
+				info.QueryType = decoded.QueryType
+				info.Params = []string{decoded.Data.RequestName}
 			}
+		} else {
+			parts := strings.Split(update.CallbackQuery.Data, ",")
+			if len(parts) > 0 {
+				info := &CallbackQueryInfo{}
+				info.QueryType = parts[0]
 
-			return info
+				if len(parts) > 1 {
+					info.Params = parts[1:]
+				} else {
+					info.Params = []string{}
+				}
+
+				return info
+			}
 		}
 	}
 
@@ -38,6 +50,8 @@ func HandleReplyToCommand(queryInfo *CallbackQueryInfo, update *tgbotapi.Update,
 		return
 	}
 
+	log.Println("Received query: ", queryInfo.QueryType)
+
 	switch queryInfo.QueryType {
 	case "replytocommand":
 		if len(queryInfo.Params) < 2 {
@@ -47,6 +61,25 @@ func HandleReplyToCommand(queryInfo *CallbackQueryInfo, update *tgbotapi.Update,
 		switch queryInfo.Params[0] {
 		case "makefilerequest":
 			HandleDropboxFileRequest(update, bot, queryInfo.Params[1:]...)
+		}
+	case "make_file_request":
+		if len(queryInfo.Params) < 1 {
+			log.Println("Insufficient params for make_file_request")
+			return
+		}
+		if queryInfo.Params[0] == "" {
+			log.Println("Ask for file request name")
+
+			msg := tgbotapi.NewMessage(
+				update.CallbackQuery.Message.Chat.ID,
+				"Please provide a file request name.",
+			)
+
+			kb := tgbotapi.NewOneTimeReplyKeyboard()
+			kb.InputFieldPlaceholder = "/makefilerequest "
+			msg.ReplyMarkup = kb
+
+			SendMessage(msg, bot)
 		}
 	}
 }
