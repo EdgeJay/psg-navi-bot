@@ -51,14 +51,11 @@ func WebHook(c *gin.Context) {
 	if bot, err := bot.NewTelegramBot(); err != nil {
 		log.Println("Webhook unable to init bot")
 	} else {
-		log.Println("“X-Telegram-Bot-Api-Secret-Token header:", c.Request.Header.Get("“X-Telegram-Bot-Api-Secret-Token"))
-
 		if update, err2 := bot.HandleUpdate(c.Request); err2 != nil {
 			log.Println("Webhook unable to parse update")
 		} else {
 			if update.Message != nil {
 				cmdStr := commands.ParseCommand(update)
-				log.Println("Received command: ", cmdStr)
 				cmd := commands.GetCommandFunc(cmdStr)
 				cmd(update, bot)
 			} else if update.CallbackQuery != nil {
@@ -70,16 +67,7 @@ func WebHook(c *gin.Context) {
 					}
 				*/
 
-				/*
-					// Sends query data back to user
-					msg := tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Data)
-					if _, err := bot.Send(msg); err != nil {
-						log.Println(err)
-					}
-				*/
-
 				queryInfo := commands.ParseCallbackQuery(update, bot)
-				log.Println("Received query: ", queryInfo.QueryType)
 				commands.HandleReplyToCommand(queryInfo, update, bot)
 			}
 		}
