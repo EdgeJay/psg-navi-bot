@@ -31,6 +31,7 @@ func GetDropboxCommands(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
 
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, reply)
 		msg.ReplyMarkup = kb.Render()
+		msg.ParseMode = "HTML"
 
 		SendMessage(msg, bot)
 	}

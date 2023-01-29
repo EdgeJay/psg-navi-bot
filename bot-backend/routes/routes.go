@@ -51,6 +51,8 @@ func WebHook(c *gin.Context) {
 	if bot, err := bot.NewTelegramBot(); err != nil {
 		log.Println("Webhook unable to init bot")
 	} else {
+		log.Println("“X-Telegram-Bot-Api-Secret-Token header:", c.Request.Header.Get("“X-Telegram-Bot-Api-Secret-Token"))
+
 		if update, err2 := bot.HandleUpdate(c.Request); err2 != nil {
 			log.Println("Webhook unable to parse update")
 		} else {

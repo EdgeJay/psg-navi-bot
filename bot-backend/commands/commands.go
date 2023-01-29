@@ -45,7 +45,12 @@ func GetCommandOneLinerDesc(command string, info *CommandInfo, addLineBreak bool
 		lineBreak = "\n"
 	}
 
-	desc := fmt.Sprintf("%s\nEmoji button: %s", info.Description, info.InlineShortcut)
+	desc := ""
+	if info.InlineShortcut != "" {
+		desc = fmt.Sprintf("%s | <b>Emoji button:</b> %s", info.Description, info.InlineShortcut)
+	} else {
+		desc = info.Description
+	}
 
 	return fmt.Sprintf("/%s (%s) : %s%s", command, info.Name, desc, lineBreak)
 }
