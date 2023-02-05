@@ -6,6 +6,8 @@ dev:
 
 build: clean
 	GOOS=linux GOARCH=amd64 go build -v -a -o build/dev/bin/app .
+	cp -r static build/dev/bin/
+	cp -r templates build/dev/bin/
 
 init:
 	terraform -chdir=infra/dev init
@@ -16,7 +18,7 @@ plan:
 apply:
 	terraform -chdir=infra/dev apply --auto-approve "plan_outfile"
 	curl -X POST "`terraform -chdir=infra/dev output -raw api_url`/init-bot"
-	echo "\n"
+	@printf "\n"
 
 destroy:
 	terraform -chdir=infra/dev destroy -var-file=variables.tfvars
