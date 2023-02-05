@@ -56,9 +56,19 @@ func setupCommands(bot *tgbotapi.BotAPI) {
 	cfg := tgbotapi.NewSetMyCommands(botCommands...)
 
 	if _, err := bot.Request(cfg); err != nil {
-		log.Println("Set bot commands failed", err)
+		log.Fatal("Set bot commands failed", err)
 	} else {
 		log.Println("Bot commands registered", err)
+	}
+}
+
+func setupWebApp(bot *tgbotapi.BotAPI) {
+	url := utils.GetLambdaInvokeUrl() + "/menu"
+	cfg := NewSetChatMenuButtonConfig(url)
+	if params, err := cfg.Params(); err != nil {
+		log.Fatal(err)
+	} else {
+		bot.MakeRequest(cfg.Method(), params)
 	}
 }
 
@@ -74,7 +84,12 @@ func NewTelegramBot() (*tgbotapi.BotAPI, error) {
 	}
 
 	setupWebHook(newBot)
-	setupCommands(newBot)
+
+	if utils.IsCommandsMode() {
+		setupCommands(newBot)
+	} else if utils.IsWebAppMode() {
+		setupWebApp(newBot)
+	}
 
 	return bot, err
 }
