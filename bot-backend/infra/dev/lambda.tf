@@ -15,6 +15,7 @@ resource "aws_lambda_function" "lambda_func" {
       dropbox_refresh_token = var.dropbox_refresh_token
       openai_api_key        = var.openai_api_key
       lambda_invoke_url     = var.lambda_invoke_url
+      interaction_mode      = var.interaction_mode
     }
   }
 }

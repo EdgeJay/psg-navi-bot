@@ -10,6 +10,18 @@ func IsProductionEnv() bool {
 	return GetAppEnv() == "prod"
 }
 
+func GetInteractionMode() string {
+	return os.Getenv("interaction_mode")
+}
+
+func IsWebAppMode() bool {
+	return GetInteractionMode() == "webapp"
+}
+
+func IsCommandsMode() bool {
+	return GetInteractionMode() == "commands"
+}
+
 func GetTelegramBotToken() string {
 	return os.Getenv("bot_token")
 }

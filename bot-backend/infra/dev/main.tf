@@ -36,6 +36,11 @@ variable "lambda_invoke_url" {
   description = "Url to invoke Lambda function"
 }
 
+variable "interaction_mode" {
+  description = "Primary mode of interaction bot should use, can be webapp or commands"
+  default     = "commands"
+}
+
 locals {
   app_id = "${lower(var.app_name)}-${lower(var.app_env)}-${random_id.unique_suffix.hex}"
 }
