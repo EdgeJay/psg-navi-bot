@@ -23,7 +23,6 @@ func Menu(c *gin.Context) {
 		now := time.Now()
 
 		params := gin.H{
-			"ip_addr":     c.Request.RemoteAddr,
 			"invoke_time": now.UnixNano(),
 		}
 
@@ -37,10 +36,12 @@ func Menu(c *gin.Context) {
 			)
 		} else {
 			// set cookie used to identify current session
-			c.SetCookie("session_info", string(cookieValue), 1200, "/", domain, true, false)
+			c.SetCookie("session_info", string(cookieValue), 1200, "/", domain, true, true)
 			// generate JWT token that will be used to verify against other session info
 			// return HTML content
-			c.HTML(http.StatusOK, "menu.html", nil)
+			c.HTML(http.StatusOK, "menu.html", gin.H{
+				"version": utils.GetAppVersion(),
+			})
 		}
 	}
 }

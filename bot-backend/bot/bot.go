@@ -1,7 +1,9 @@
 package bot
 
 import (
+	"fmt"
 	"log"
+	"time"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 
@@ -63,7 +65,7 @@ func setupCommands(bot *tgbotapi.BotAPI) {
 }
 
 func setupWebApp(bot *tgbotapi.BotAPI) {
-	url := utils.GetLambdaInvokeUrl() + "/menu"
+	url := utils.GetLambdaInvokeUrl() + "/menu?r=" + fmt.Sprint((time.Now()).UnixNano())
 	cfg := NewSetChatMenuButtonConfig(url)
 	if params, err := cfg.Params(); err != nil {
 		log.Fatal(err)

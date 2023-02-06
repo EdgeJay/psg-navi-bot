@@ -9,6 +9,7 @@ resource "aws_lambda_function" "lambda_func" {
   environment {
     variables = {
       app_env               = var.app_env
+      app_version           = "${var.app_version}-${random_id.app_version_suffix.hex}"
       bot_token             = var.bot_token
       dropbox_app_key       = var.dropbox_app_key
       dropbox_app_secret    = var.dropbox_app_secret

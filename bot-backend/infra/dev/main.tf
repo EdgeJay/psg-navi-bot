@@ -12,6 +12,10 @@ variable "app_env" {
   default     = "dev"
 }
 
+variable "app_version" {
+  description = "Application version"
+}
+
 variable "bot_token" {
   description = "API token of Telegram bot"
 }
@@ -55,6 +59,18 @@ resource "random_id" "unique_suffix" {
   byte_length = 2
 }
 
+resource "random_id" "app_version_suffix" {
+  byte_length = 4
+
+  keepers = {
+    archive_hash = "${data.archive_file.lambda_zip.output_md5}"
+  }
+}
+
 output "api_url" {
   value = aws_api_gateway_deployment.api_deployment.invoke_url
+}
+
+output "app_version" {
+  value = aws_lambda_function.lambda_func.environment[0].variables.app_version
 }
