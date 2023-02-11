@@ -1,6 +1,10 @@
 package utils
 
-import "os"
+import (
+	"os"
+
+	"github.com/spf13/viper"
+)
 
 func GetAppEnv() string {
 	return os.Getenv("app_env")
@@ -27,7 +31,12 @@ func IsCommandsMode() bool {
 }
 
 func GetTelegramBotToken() string {
-	return os.Getenv("bot_token")
+	token := os.Getenv("bot_token")
+	if token != "" {
+		return token
+	}
+	// read from .env file as fallback
+	return viper.GetString("bot_token")
 }
 
 func GetLambdaInvokeUrl() string {
