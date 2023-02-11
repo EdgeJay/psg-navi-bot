@@ -16,7 +16,7 @@ type MenuSession struct {
 	Checksum  string
 }
 
-func NewMenuSession(startTime time.Time) (*MenuSession, error) {
+func NewMenuSession() (*MenuSession, error) {
 	uuid, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err
