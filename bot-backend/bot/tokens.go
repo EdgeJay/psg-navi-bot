@@ -1,9 +1,6 @@
 package bot
 
 import (
-	"crypto/hmac"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"net/url"
 	"sort"
@@ -85,23 +82,17 @@ func IsWebAppInitDataHashValid(data string) (bool, error) {
 	if secret, err := GetSecretKeyForWebApp(); err != nil {
 		return false, err
 	} else {
-		h := hmac.New(sha256.New, secret)
-		if _, err := h.Write([]byte(reordered)); err != nil {
+		sha, err := utils.CreateHmacHexString(reordered, secret)
+		if err != nil {
 			return false, err
-		} else {
-			sha := hex.EncodeToString(h.Sum(nil))
-			return sha == hash, nil
 		}
+
+		return sha == hash, nil
 	}
 }
 
 func GetSecretKeyForWebApp() ([]byte, error) {
 	token := utils.GetTelegramBotToken()
 	secret := "WebAppData"
-	h := hmac.New(sha256.New, []byte(secret))
-	if _, err := h.Write([]byte(token)); err != nil {
-		return nil, err
-	} else {
-		return h.Sum(nil), nil
-	}
+	return utils.CreateHmac(token, []byte(secret))
 }
