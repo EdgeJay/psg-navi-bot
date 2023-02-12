@@ -1,4 +1,6 @@
 function startSession() {
+    window.Telegram.WebApp.showAlert(window.__token);
+    /*
     window.cookieStore.get("psg_navi_bot_session")
         .then((data) => {
             window.Telegram.WebApp.showAlert(JSON.stringify(data))
@@ -6,6 +8,7 @@ function startSession() {
         .catch((err) => {
             window.Telegram.WebApp.showAlert(err.message)
         });
+    */
 }
 
 function setupMenu() {

@@ -1,17 +1,15 @@
-package routes
+package middlewares
 
 import (
 	"net/http"
 
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/cookies"
-	"github.com/EdgeJay/psg-navi-bot/bot-backend/middlewares"
-	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 	"github.com/gin-gonic/gin"
 )
 
-func Menu(c *gin.Context) {
+func CheckCsrf(c *gin.Context) {
 	// find key in context to prove that session is properly set
-	sess, exists := c.Get(middlewares.PsgNaviBotSessionName)
+	sess, exists := c.Get(PsgNaviBotSessionName)
 
 	if !exists {
 		c.Abort()
@@ -26,9 +24,14 @@ func Menu(c *gin.Context) {
 
 	menuSession := (sess).(*cookies.MenuSession)
 
-	// return HTML output
-	c.HTML(http.StatusOK, "menu.html", gin.H{
-		"token":   menuSession.Checksum,
-		"version": utils.GetAppVersion(),
-	})
+	if menuSession.Checksum != c.GetHeader("X-PSGNaviBot-Csrf-Token") {
+		c.Abort()
+		c.JSON(
+			http.StatusUnauthorized,
+			gin.H{
+				"error": "Invalid bot menu session",
+			},
+		)
+		return
+	}
 }

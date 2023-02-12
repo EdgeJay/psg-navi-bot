@@ -15,7 +15,7 @@ func NewRouter() *gin.Engine {
 
 	// add routes
 	router.GET("/menu", middlewares.StartSession, Menu)
-	router.POST("/init-menu-session", InitMenuSession)
+	router.POST("/init-menu-session", middlewares.CheckSession, middlewares.CheckCsrf, InitMenuSession)
 
 	// diagnostic and setup endpoints
 	router.GET("/env", Env)
