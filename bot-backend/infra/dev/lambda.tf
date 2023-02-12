@@ -54,9 +54,35 @@ variable "iam_policy_arn" {
   ]
 }
 
+data "aws_iam_policy_document" "lambda_ssm_policy_document" {
+  statement {
+    actions = [
+      "ssm:GetParameters",
+      "ssm:GetParametersByPath",
+      "kms:Decrypt"
+    ]
+
+    resources = [
+      "${aws_ssm_parameter.dev_rsa_private.arn}",
+      "${aws_ssm_parameter.dev_rsa_public.arn}"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "lambda_ssm_policy" {
+  name   = "PSGNaviBotLambdaSSMPolicy"
+  policy = data.aws_iam_policy_document.lambda_ssm_policy_document.json
+}
+
 resource "aws_iam_policy_attachment" "role_attach" {
   name       = "policy-${local.app_id}"
   roles      = [aws_iam_role.lambda_exec.id]
   count      = length(var.iam_policy_arn)
   policy_arn = element(var.iam_policy_arn, count.index)
+}
+
+resource "aws_iam_policy_attachment" "custom_policy_attach" {
+  name       = "custom-policy-${local.app_id}"
+  roles      = [aws_iam_role.lambda_exec.id]
+  policy_arn = aws_iam_policy.lambda_ssm_policy.arn
 }
