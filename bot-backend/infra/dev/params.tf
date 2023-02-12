@@ -52,3 +52,25 @@ resource "aws_ssm_parameter" "dev_openai_api_key" {
     environment = "dev"
   }
 }
+
+resource "aws_ssm_parameter" "dev_rsa_private" {
+  name        = "/psg_navi_bot/dev/rsa_private"
+  description = "RSA private key for JWT"
+  type        = "SecureString"
+  value       = "${data.local_file.rsa_private.content}"
+
+  tags = {
+    environment = "dev"
+  }
+}
+
+resource "aws_ssm_parameter" "dev_rsa_public" {
+  name        = "/psg_navi_bot/dev/rsa_public"
+  description = "RSA public key for JWT"
+  type        = "SecureString"
+  value       = "${data.local_file.rsa_public.content}"
+
+  tags = {
+    environment = "dev"
+  }
+}

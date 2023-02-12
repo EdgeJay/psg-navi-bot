@@ -1,14 +1,21 @@
 function startSession() {
-    window.Telegram.WebApp.showAlert(window.__token);
-    /*
-    window.cookieStore.get("psg_navi_bot_session")
-        .then((data) => {
-            window.Telegram.WebApp.showAlert(JSON.stringify(data))
+    // init session and get jwt token stored in cookies
+    fetch('/api/init-menu-session', {
+        method: 'POST',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-PSGNaviBot-Csrf-Token': window.__token,
+        },
+        body: JSON.stringify({
+            init_data: window.Telegram.WebApp.initData,
         })
-        .catch((err) => {
-            window.Telegram.WebApp.showAlert(err.message)
-        });
-    */
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data);
+    });
 }
 
 function setupMenu() {

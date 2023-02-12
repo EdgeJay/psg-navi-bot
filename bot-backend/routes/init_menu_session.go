@@ -1,10 +1,12 @@
 package routes
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/bot"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/middlewares"
 )
 
@@ -40,4 +42,26 @@ func InitMenuSession(c *gin.Context) {
 		return
 	}
 
+	// Get WebAppInitData
+	_, err := bot.UnMarshalWebAppInitData(payload.InitData)
+	if err != nil {
+		log.Println("invalid init data", err)
+		c.Abort()
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": "Invalid init data",
+			},
+		)
+		return
+	}
+
+	// create jwt token and save as cookie
+
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"status": "ok",
+		},
+	)
 }
