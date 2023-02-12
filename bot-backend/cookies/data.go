@@ -24,22 +24,33 @@ func NewMenuSession() (*MenuSession, error) {
 
 	now := time.Now()
 	id := uuid.String()
-	checksum, csErr := utils.CreateHmacHexString(
-		fmt.Sprintf("%s.%d", id, now.UnixNano()),
-		[]byte("MenuSessionChecksum"),
-	)
-
-	if csErr != nil {
-		return nil, csErr
-	}
 
 	session := MenuSession{
 		ID:        id,
 		StartTime: now,
-		Checksum:  checksum,
+	}
+
+	csErr := session.RecalculateChecksum()
+	if csErr != nil {
+		return nil, csErr
 	}
 
 	return &session, nil
+}
+
+func (m *MenuSession) RecalculateChecksum() error {
+	checksum, err := utils.CreateHmacHexString(
+		fmt.Sprintf("%s.%d", m.ID, m.StartTime.UnixNano()),
+		[]byte("MenuSessionChecksum"),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	m.Checksum = checksum
+
+	return nil
 }
 
 func (m *MenuSession) Map() gin.H {
