@@ -46,6 +46,19 @@ func TestMap(t *testing.T) {
 	assert.EqualValues(t, expectedChecksum, mapped["checksum"])
 }
 
+func TestIsExpired(t *testing.T) {
+	sess, err := NewMenuSession()
+	assert.Nil(t, err)
+
+	sess.StartTime = sess.StartTime.Add(time.Second * time.Duration(-40))
+	assert.True(t, sess.IsExpired(30))
+
+	sess, err = NewMenuSession()
+	assert.Nil(t, err)
+
+	assert.False(t, sess.IsExpired(30))
+}
+
 func TestIsChecksumValid(t *testing.T) {
 	sess, err := NewMenuSession()
 	assert.Nil(t, err)
