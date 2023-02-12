@@ -1,22 +1,24 @@
-function getSessionInfo() {
-    window.cookieStore.get("session_info")
+function startSession() {
+    window.cookieStore.get("psg_navi_bot_session")
         .then((data) => {
-            window.Telegram.WebApp.showPopup(JSON.stringify(data))
+            window.Telegram.WebApp.showAlert(JSON.stringify(data))
         })
         .catch((err) => {
-            window.Telegram.WebApp.showPopup(err.message)
+            window.Telegram.WebApp.showAlert(err.message)
         });
 }
 
 function setupMenu() {
     document.getElementById("btn-dropbox").addEventListener("click", function () {
+        /*
         const data = {};
         window.Telegram.WebApp.sendData(JSON.stringify(data));
+        */
     });
 }
 
 function init() {
-    getSessionInfo();
+    startSession();
     setupMenu();
 }
 
