@@ -48,6 +48,7 @@ func StartSession(c *gin.Context) {
 		// get domain for cookie
 		domain, err := utils.GetLambdaInvokeUrlDomain()
 		if err != nil {
+			c.Abort()
 			c.JSON(
 				http.StatusInternalServerError,
 				gin.H{
@@ -61,6 +62,7 @@ func StartSession(c *gin.Context) {
 		// create cookie
 		sess, sessErr := cookies.NewMenuSession()
 		if sessErr != nil {
+			c.Abort()
 			c.JSON(
 				http.StatusInternalServerError,
 				gin.H{
@@ -68,6 +70,7 @@ func StartSession(c *gin.Context) {
 					"details": sessErr.Error(),
 				},
 			)
+			return
 		}
 
 		// set cookie
@@ -82,6 +85,7 @@ func StartSession(c *gin.Context) {
 		)
 
 		if cookieErr != nil {
+			c.Abort()
 			c.JSON(
 				http.StatusInternalServerError,
 				gin.H{
@@ -89,15 +93,12 @@ func StartSession(c *gin.Context) {
 					"details": cookieErr.Error(),
 				},
 			)
-		} else {
-			// Save into context
-			c.Set(PsgNaviBotSessionName, sess)
+			return
 		}
+
+		// Save into context
+		c.Set(PsgNaviBotSessionName, sess)
 	} else {
 		c.Set(PsgNaviBotSessionName, menuSession)
 	}
-}
-
-func CheckSession(c *gin.Context) {
-
 }
