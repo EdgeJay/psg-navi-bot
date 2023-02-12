@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -43,4 +44,25 @@ func TestMap(t *testing.T) {
 	mapped := sess.Map()
 	assert.EqualValues(t, expectedTimestamp, mapped["start_time"])
 	assert.EqualValues(t, expectedChecksum, mapped["checksum"])
+}
+
+func TestIsChecksumValid(t *testing.T) {
+	sess, err := NewMenuSession()
+	assert.Nil(t, err)
+	const expectedID = "9fbfaddb-1fb6-49c9-bad6-5f3a32d2b7cc"
+	const expectedTimestamp int64 = 1676109328233770637
+
+	sess.ID = expectedID
+	sess.StartTime = time.Unix(0, expectedTimestamp)
+	err = sess.RecalculateChecksum()
+	assert.Nil(t, err)
+
+	assert.EqualValues(t, true, sess.IsChecksumValid())
+
+	// Now change one attribute value, expected checksum to be invalid
+	uuid, uuidErr := uuid.NewRandom()
+	assert.Nil(t, uuidErr)
+
+	sess.ID = uuid.String()
+	assert.EqualValues(t, false, sess.IsChecksumValid())
 }
