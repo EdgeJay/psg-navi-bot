@@ -17,6 +17,7 @@ resource "aws_lambda_function" "lambda_func" {
       openai_api_key        = var.openai_api_key
       lambda_invoke_url     = var.lambda_invoke_url
       interaction_mode      = var.interaction_mode
+      cookie_duration       = var.cookie_duration
     }
   }
 }

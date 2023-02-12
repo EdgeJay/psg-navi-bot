@@ -2,6 +2,7 @@ package utils
 
 import (
 	"os"
+	"strconv"
 
 	"github.com/spf13/viper"
 )
@@ -53,4 +54,12 @@ func GetDropboxAppSecret() string {
 
 func GetDropboxRefreshToken() string {
 	return os.Getenv("dropbox_refresh_token")
+}
+
+func GetCookieDuration() int {
+	duration, err := strconv.Atoi(os.Getenv("cookie_duration"))
+	if err != nil {
+		return 1200
+	}
+	return duration
 }
