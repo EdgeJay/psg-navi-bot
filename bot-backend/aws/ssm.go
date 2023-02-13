@@ -12,10 +12,11 @@ func GetSSMServiceClient() ssmiface.SSMAPI {
 	return svc
 }
 
-func GetParameter(svc ssmiface.SSMAPI, name *string) (*ssm.GetParameterOutput, error) {
+func GetParameter(svc ssmiface.SSMAPI, name *string, decrypt bool) (*ssm.GetParameterOutput, error) {
 	results, err := svc.GetParameter(
 		&ssm.GetParameterInput{
-			Name: name,
+			Name:           name,
+			WithDecryption: &decrypt,
 		},
 	)
 	return results, err
