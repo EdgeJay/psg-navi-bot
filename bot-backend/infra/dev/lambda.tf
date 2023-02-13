@@ -56,15 +56,27 @@ variable "iam_policy_arn" {
 
 data "aws_iam_policy_document" "lambda_ssm_policy_document" {
   statement {
+    effect  = "Allow"
     actions = [
+      "ssm:GetParameter",
       "ssm:GetParameters",
-      "ssm:GetParametersByPath",
-      "kms:Decrypt"
+      "ssm:GetParametersByPath"
     ]
 
     resources = [
       "${aws_ssm_parameter.dev_rsa_private.arn}",
       "${aws_ssm_parameter.dev_rsa_public.arn}"
+    ]
+  }
+
+  statement {
+    effect  = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+
+    resources = [
+      "arn:aws:kms:ap-southeast-1:818374272882:key/1a7ea267-43ae-40cc-8ead-8e26a0d63149"
     ]
   }
 }
