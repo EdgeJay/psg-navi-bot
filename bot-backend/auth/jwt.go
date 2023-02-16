@@ -1,10 +1,12 @@
 package auth
 
 import (
+	"fmt"
 	"log"
 	"time"
 
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/aws"
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 )
@@ -12,7 +14,7 @@ import (
 const tokenIssuer = "psgnavibot.sg"
 
 func GenerateToken(sub string, duration int) (string, error) {
-	rsaPrivateKeyName := "/psg_navi_bot/dev/rsa_private"
+	rsaPrivateKeyName := fmt.Sprintf("/psg_navi_bot/%s/rsa_private", utils.GetAppEnv())
 	svc := aws.GetSSMServiceClient()
 	param, ssmErr := aws.GetParameter(svc, &rsaPrivateKeyName, true)
 	if ssmErr != nil {

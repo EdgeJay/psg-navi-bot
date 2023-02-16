@@ -10,10 +10,6 @@ resource "aws_lambda_function" "lambda_func" {
     variables = {
       app_env               = var.app_env
       app_version           = "${var.app_version}-${random_id.app_version_suffix.hex}"
-      bot_token             = var.bot_token
-      dropbox_app_key       = var.dropbox_app_key
-      dropbox_app_secret    = var.dropbox_app_secret
-      openai_api_key        = var.openai_api_key
       lambda_invoke_url     = var.lambda_invoke_url
       interaction_mode      = var.interaction_mode
       cookie_duration       = var.cookie_duration

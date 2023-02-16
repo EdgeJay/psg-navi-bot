@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 
@@ -8,6 +9,10 @@ import (
 
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/aws"
 )
+
+func getAWSParamStoreKeyName(name string) string {
+	return fmt.Sprintf("/psg_navi_bot/%s/%s", GetAppEnv(), name)
+}
 
 func GetAppEnv() string {
 	return os.Getenv("app_env")
@@ -34,7 +39,10 @@ func IsCommandsMode() bool {
 }
 
 func GetTelegramBotToken() string {
-	token := os.Getenv("bot_token")
+	token := aws.GetStringParameter(
+		getAWSParamStoreKeyName("telegram_api_token"),
+		os.Getenv("bot_token"),
+	)
 	if token != "" {
 		return token
 	}
@@ -47,17 +55,31 @@ func GetLambdaInvokeUrl() string {
 }
 
 func GetDropboxAppKey() string {
-	return os.Getenv("dropbox_app_key")
+	return aws.GetStringParameter(
+		getAWSParamStoreKeyName("dropbox_app_key"),
+		os.Getenv("dropbox_app_key"),
+	)
 }
 
 func GetDropboxAppSecret() string {
-	return os.Getenv("dropbox_app_secret")
+	return aws.GetStringParameter(
+		getAWSParamStoreKeyName("dropbox_app_secret"),
+		os.Getenv("dropbox_app_secret"),
+	)
 }
 
 func GetDropboxRefreshToken() string {
-	// get from AWS SSM
-	keyName := "/psg_navi_bot/dev/dropbox_refresh_token"
-	return aws.GetStringParameter(keyName, os.Getenv("dropbox_refresh_token"))
+	return aws.GetStringParameter(
+		getAWSParamStoreKeyName("dropbox_refresh_token"),
+		os.Getenv("dropbox_refresh_token"),
+	)
+}
+
+func GetOpenAiApiKey() string {
+	return aws.GetStringParameter(
+		getAWSParamStoreKeyName("openai_api_key"),
+		os.Getenv("openai_api_key"),
+	)
 }
 
 func GetCookieDuration() int {
