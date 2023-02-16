@@ -5,6 +5,8 @@ import (
 	"strconv"
 
 	"github.com/spf13/viper"
+
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/aws"
 )
 
 func GetAppEnv() string {
@@ -53,7 +55,9 @@ func GetDropboxAppSecret() string {
 }
 
 func GetDropboxRefreshToken() string {
-	return os.Getenv("dropbox_refresh_token")
+	// get from AWS SSM
+	keyName := "/psg_navi_bot/dev/dropbox_refresh_token"
+	return aws.GetStringParameter(keyName, os.Getenv("dropbox_refresh_token"))
 }
 
 func GetCookieDuration() int {

@@ -21,3 +21,18 @@ func GetParameter(svc ssmiface.SSMAPI, name *string, decrypt bool) (*ssm.GetPara
 	)
 	return results, err
 }
+
+func GetStringParameter(name, fallback string) string {
+	svc := GetSSMServiceClient()
+	param, err := GetParameter(svc, &name, true)
+	if err != nil {
+		// fallback
+		return fallback
+	}
+	output := param.Parameter.Value
+	if output != nil && *output != "" {
+		return *output
+	}
+	// fallback
+	return fallback
+}

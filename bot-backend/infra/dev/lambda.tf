@@ -13,7 +13,6 @@ resource "aws_lambda_function" "lambda_func" {
       bot_token             = var.bot_token
       dropbox_app_key       = var.dropbox_app_key
       dropbox_app_secret    = var.dropbox_app_secret
-      dropbox_refresh_token = var.dropbox_refresh_token
       openai_api_key        = var.openai_api_key
       lambda_invoke_url     = var.lambda_invoke_url
       interaction_mode      = var.interaction_mode
@@ -64,6 +63,11 @@ data "aws_iam_policy_document" "lambda_ssm_policy_document" {
     ]
 
     resources = [
+      "${aws_ssm_parameter.dev_params.arn}",
+      "${aws_ssm_parameter.dev_dbx_app_key.arn}",
+      "${aws_ssm_parameter.dev_dbx_app_secret.arn}",
+      "${aws_ssm_parameter.dev_dbx_refresh_token.arn}",
+      "${aws_ssm_parameter.dev_openai_api_key.arn}",
       "${aws_ssm_parameter.dev_rsa_private.arn}",
       "${aws_ssm_parameter.dev_rsa_public.arn}"
     ]
