@@ -13,9 +13,17 @@ func NewRouter() *gin.Engine {
 	router.Static("public", "./static")
 	router.LoadHTMLGlob("templates/*.html")
 
-	// add routes
+	// menu
 	router.GET("/menu", middlewares.StartSession, Menu)
 	router.POST("/init-menu-session", middlewares.CheckSession, middlewares.CheckCsrf, InitMenuSession)
+	// dropbox
+	router.POST(
+		"/dbx-add-file-request",
+		middlewares.CheckSession,
+		middlewares.CheckCsrf,
+		middlewares.CheckJwt,
+		DropboxAddFileRequest,
+	)
 
 	// diagnostic and setup endpoints
 	router.GET("/env", Env)
