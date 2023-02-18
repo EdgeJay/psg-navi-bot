@@ -46,14 +46,14 @@
             </button>
         </section>
         <section id="section-dropbox-add-file-request" class="menu hidden">
-            <form>
+            <form id="form-add-dropbox-file-request">
                 <label for="txt-filerequest-title">
                     File Request Title
                     <input type="text" id="txt-filerequest-title" name="txt-filerequest-title" required />
                 </label>
                 <label for="txt-filerequest-desc">
                     File Request Description
-                    <textarea type="text" id="txt-filerequest-desc" name="txt-filerequest-desc" rows="8" required></textarea>
+                    <textarea type="text" id="txt-filerequest-desc" name="txt-filerequest-desc" maxlength="200" rows="8" required></textarea>
                 </label>
                 <button type="submit">Create</button>
             </form>

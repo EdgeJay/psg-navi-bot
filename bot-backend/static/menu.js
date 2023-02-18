@@ -31,14 +31,49 @@ function startSession() {
 function setupMenu() {
     document.getElementById("btn-dropbox").addEventListener("click", function () {
         showSection('dropbox-menu');
-        /*
-        const data = {};
-        window.Telegram.WebApp.sendData(JSON.stringify(data));
-        */
     });
 
     document.getElementById("btn-add-dropbox-file-request").addEventListener("click", function () {
         showSection('dropbox-add-file-request');
+    });
+}
+
+function setupForms() {
+    const formDbx = document.getElementById('form-add-dropbox-file-request')
+
+    formDbx.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+        
+        formDbx.setAttribute('aria-busy', 'true');
+
+        fetch('/api/dbx-add-file-request', {
+            method: 'POST',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-PSGNaviBot-Csrf-Token': window.__token,
+            },
+            body: JSON.stringify({
+                title: document.getElementById('txt-filerequest-title').value,
+                desc: document.getElementById('txt-filerequest-desc').value,
+            })
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.status !== 'ok') {
+                throw new Error('Add new file request failed');
+            }
+
+            window.Telegram.WebApp.showAlert('File request created', () => {
+                showSection('dropbox-menu');
+            });
+        })
+        .catch(() => {
+            formDbx.setAttribute('aria-busy', 'true');
+            console.log('Unable to add new file request');
+            window.Telegram.WebApp.showAlert('Unable to add new file request', () => {});
+        });
     });
 }
 
@@ -59,6 +94,7 @@ function showSection(sectionId) {
 function init() {
     startSession();
     setupMenu();
+    setupForms();
 }
 
 function onLoad() {
