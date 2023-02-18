@@ -10,7 +10,7 @@ import (
 )
 
 func InitBot(c *gin.Context) {
-	if _, err := bot.NewTelegramBot(); err != nil {
+	if _, err := bot.InitTelegramBot(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to setup Telegram bot API"})
 	} else {
 		c.JSON(

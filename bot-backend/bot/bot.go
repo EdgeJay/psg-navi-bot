@@ -80,6 +80,22 @@ func NewTelegramBot() (*tgbotapi.BotAPI, error) {
 	}
 
 	newBot, err := tgbotapi.NewBotAPI(utils.GetTelegramBotToken())
+	if err != nil {
+		return nil, err
+	}
+
+	bot = newBot
+	newBot.Debug = !utils.IsProductionEnv()
+
+	return bot, nil
+}
+
+func InitTelegramBot() (*tgbotapi.BotAPI, error) {
+	if bot != nil {
+		return bot, nil
+	}
+
+	newBot, err := tgbotapi.NewBotAPI(utils.GetTelegramBotToken())
 	if err == nil {
 		bot = newBot
 		newBot.Debug = !utils.IsProductionEnv()
