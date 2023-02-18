@@ -59,7 +59,7 @@ func InitMenuSession(c *gin.Context) {
 
 	// create jwt token and save as cookie
 	tokenDuration := utils.GetCookieDuration()
-	token, tokenErr := auth.GenerateToken(initData.User.UserName, tokenDuration)
+	token, tokenErr := auth.GenerateToken(initData.User.UserName, int64(initData.User.Id), tokenDuration)
 	if tokenErr != nil {
 		log.Println("unable to generate jwt token", tokenErr)
 		c.Abort()
