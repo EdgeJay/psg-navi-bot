@@ -26,6 +26,20 @@ func (u *JwtUtil) GetUserName() string {
 	return sub
 }
 
+func (u *JwtUtil) GetUserID() int64 {
+	claims, ok := u.Token.Claims.(jwt.MapClaims)
+	if !ok {
+		return 0
+	}
+
+	sub, ok := claims["tgUserId"].(int64)
+	if !ok {
+		return 0
+	}
+
+	return sub
+}
+
 func (u *JwtUtil) TokenIsValid() bool {
 	return u.GetUserName() != ""
 }

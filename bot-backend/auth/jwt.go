@@ -12,6 +12,11 @@ import (
 	"github.com/google/uuid"
 )
 
+type JwtTokenClaims struct {
+	UserID int64 `json:"tgUserId"`
+	jwt.RegisteredClaims
+}
+
 const tokenIssuer = "psgnavibot.sg"
 
 func ParseToken(str string) (*jwt.Token, error) {
@@ -32,7 +37,7 @@ func ParseToken(str string) (*jwt.Token, error) {
 
 	token, tokenErr := jwt.Parse(str, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return pubKey, nil
 	})
@@ -61,7 +66,7 @@ func ParseToken(str string) (*jwt.Token, error) {
 	return token, nil
 }
 
-func GenerateToken(sub string, duration int) (string, error) {
+func GenerateToken(sub string, userId int64, duration int) (string, error) {
 	rsaPrivateKeyName := fmt.Sprintf("/psg_navi_bot/%s/rsa_private", utils.GetAppEnv())
 	svc := aws.GetSSMServiceClient()
 	param, ssmErr := aws.GetParameter(svc, &rsaPrivateKeyName, true)
@@ -86,14 +91,16 @@ func GenerateToken(sub string, duration int) (string, error) {
 	}
 
 	// create token
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.RegisteredClaims{
-		ID:        uuid.String(),
-		IssuedAt:  jwt.NewNumericDate(now),
-		ExpiresAt: jwt.NewNumericDate(now.Add(time.Duration(duration) * time.Second)),
-		NotBefore: jwt.NewNumericDate(now),
-		Issuer:    tokenIssuer,
-		Subject:   sub,
-	})
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, JwtTokenClaims{
+		userId,
+		jwt.RegisteredClaims{
+			ID:        uuid.String(),
+			IssuedAt:  jwt.NewNumericDate(now),
+			ExpiresAt: jwt.NewNumericDate(now.Add(time.Duration(duration) * time.Second)),
+			NotBefore: jwt.NewNumericDate(now),
+			Issuer:    tokenIssuer,
+			Subject:   sub,
+		}})
 
 	signed, signErr := token.SignedString(pvtKey)
 	if signErr != nil {
