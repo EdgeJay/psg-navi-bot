@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PSGNaviBot</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.5.7/css/pico.min.css">
     <link rel="stylesheet" href="./public/default.css?v={{ .version }}">
     <link href='https://cdn.jsdelivr.net/npm/devicons@1.8.0/css/devicons.min.css' rel='stylesheet'>
     <!-- The following script must be before other scripts -->
@@ -15,8 +16,8 @@
     </script>
 </head>
 <body>
-    <section>
-        <menu>
+    <main class="container">
+        <section class="menu" id="section-menu">
             <button id="btn-dropbox">
                 <i class="devicons devicons-dropbox"></i>
                 <label>Dropbox</label>
@@ -25,10 +26,41 @@
                 <i data-feather="help-circle"></i>
                 <label>Ask me a question</label>
             </button>
-        </menu>
-    </section>
-    <footer>
-        <span>Version {{ .version }}</span>
+        </section>
+        <section id="section-dropbox-menu" class="menu hidden">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="#" class="secondary">
+                            <i data-feather="arrow-left"></i>
+                        </a>
+                    </li>
+                </ul>
+                <ul>
+                    <li><strong>Dropbox</strong></li>
+                </ul>
+            </nav>
+            <button id="btn-add-dropbox-file-request">
+                <i data-feather="plus-circle"></i>
+                <label>Add File Request</label>
+            </button>
+        </section>
+        <section id="section-dropbox-add-file-request" class="menu hidden">
+            <form>
+                <label for="txt-filerequest-title">
+                    File Request Title
+                    <input type="text" id="txt-filerequest-title" name="txt-filerequest-title" required />
+                </label>
+                <label for="txt-filerequest-desc">
+                    File Request Description
+                    <textarea type="text" id="txt-filerequest-desc" name="txt-filerequest-desc" rows="8" required></textarea>
+                </label>
+                <button type="submit">Create</button>
+            </form>
+        </section>
+    </main>
+    <footer class="version">
+        Version {{ .version }}
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="./public/menu.js?v={{ .version }}"></script>

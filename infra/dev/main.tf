@@ -55,16 +55,16 @@ locals {
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_dir  = "../../build/dev/bin"
-  output_path = "../../build/dev/app.zip"
+  source_dir  = "../../bot-backend/build/dev/bin"
+  output_path = "../../bot-backend/build/dev/app.zip"
 }
 
 data "local_file" "rsa_private" {
-  filename = "../../certs/rsa_private.pem"
+  filename = "../../bot-backend/certs/rsa_private.pem"
 }
 
 data "local_file" "rsa_public" {
-  filename = "../../certs/rsa_public.pem"
+  filename = "../../bot-backend/certs/rsa_public.pem"
 }
 
 resource "random_id" "unique_suffix" {

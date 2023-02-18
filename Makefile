@@ -1,13 +1,15 @@
 run:
-	app_env=dev go run .
+	cd ./bot-backend && app_env=dev go run .
 
 dev:
-	app_env=dev app_version=1.0.0 app_version=1.0.0 air
+	cd ./bot-backend && app_env=dev app_version=1.0.0 app_version=1.0.0 air
 
-build: clean
-	GOOS=linux GOARCH=amd64 go build -v -a -o build/dev/bin/app .
-	cp -r static build/dev/bin/
-	cp -r templates build/dev/bin/
+build: clean build-backend
+
+build-backend:
+	cd ./bot-backend && GOOS=linux GOARCH=amd64 go build -v -a -o build/dev/bin/app . && \
+		cp -r static build/dev/bin/ && \
+		cp -r templates build/dev/bin/
 
 init:
 	terraform -chdir=infra/dev init
@@ -24,4 +26,4 @@ destroy:
 	terraform -chdir=infra/dev destroy -var-file=variables.tfvars
 
 clean:
-	rm -rf ./build/dev
+	rm -rf ./bot-backend/build/dev
