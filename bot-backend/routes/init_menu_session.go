@@ -9,7 +9,6 @@ import (
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/auth"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/bot"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/cookies"
-	"github.com/EdgeJay/psg-navi-bot/bot-backend/middlewares"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 )
 
@@ -18,20 +17,6 @@ type InitMenuSessionPayload struct {
 }
 
 func InitMenuSession(c *gin.Context) {
-	// find key in context to prove that session is properly set
-	_, exists := c.Get(middlewares.PsgNaviBotSessionName)
-
-	if !exists {
-		c.Abort()
-		c.JSON(
-			http.StatusUnauthorized,
-			gin.H{
-				"error": "Missing bot menu session",
-			},
-		)
-		return
-	}
-
 	// get payload
 	var payload InitMenuSessionPayload
 	if err := c.BindJSON(&payload); err != nil {
