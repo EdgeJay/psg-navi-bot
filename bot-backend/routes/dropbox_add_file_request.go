@@ -22,60 +22,6 @@ type AddFileRequest struct {
 }
 
 func DropboxAddFileRequest(c *gin.Context) {
-	/*
-		tokenCookie, _ := c.Get(middlewares.PsgNaviBotJwtName)
-		token, ok := tokenCookie.(*jwt.Token)
-		if !ok {
-			c.Abort()
-			c.JSON(
-				http.StatusForbidden,
-				gin.H{
-					"error": "Invalid token in cookie",
-				},
-			)
-			return
-		}
-
-		jwtUtil := auth.NewJwtUtil(token)
-		userName := jwtUtil.GetUserName()
-		if userName == "" {
-			c.Abort()
-			c.JSON(
-				http.StatusForbidden,
-				gin.H{
-					"error": "Cookie token claims invalid",
-				},
-			)
-			return
-		}
-
-		// check if user has permission to perform task
-		adminManager, err := auth.NewAdminManager()
-		if err != nil {
-			c.Abort()
-			c.JSON(
-				http.StatusInternalServerError,
-				gin.H{
-					"error": "Unable to fetch permissions",
-				},
-			)
-			return
-		}
-
-		if !adminManager.CanPerformTask(userName, auth.DomainDropbox, auth.AddFileRequest) {
-			if userName == "" {
-				c.Abort()
-				c.JSON(
-					http.StatusBadRequest,
-					gin.H{
-						"error": "Not allowed to perform task",
-					},
-				)
-				return
-			}
-		}
-	*/
-
 	tokenCookie, _ := c.Get(middlewares.PsgNaviBotJwtName)
 	token, ok := tokenCookie.(*jwt.Token)
 	if !ok {
