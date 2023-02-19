@@ -113,13 +113,5 @@ func InitTelegramBot() (*tgbotapi.BotAPI, error) {
 	setupWebHook(newBot)
 	setupCommands(newBot)
 
-	/*
-		if utils.IsCommandsMode() {
-			setupCommands(newBot)
-		} else if utils.IsWebAppMode() {
-			setupWebApp(newBot)
-		}
-	*/
-
 	return bot, err
 }
