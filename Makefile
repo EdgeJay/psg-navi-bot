@@ -19,9 +19,10 @@ plan:
 
 apply:
 	terraform -chdir=infra/dev apply --auto-approve "plan_outfile"
-	curl -X POST \
-		--header "X-PSGNaviBot-Init-Token: `terraform -chdir=infra/dev output -raw app_version`" \
-		"`terraform -chdir=infra/dev output -raw api_url`/init-bot"
+	go run github.com/EdgeJay/psg-navi-bot/bot-utils \
+		-url="`terraform -chdir=infra/dev output -raw api_url`/init-bot" \
+		-version="`terraform -chdir=infra/dev output -raw app_version`" \
+		-secret="`terraform -chdir=infra/dev output -raw init_token_secret`"
 	@printf "\n"
 
 destroy:
