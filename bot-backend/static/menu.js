@@ -29,13 +29,40 @@ function startSession() {
 }
 
 function setupMenu() {
-    document.getElementById("btn-dropbox").addEventListener("click", function () {
+    document.getElementById("btn-dropbox").addEventListener("click", () => {
         showSection('dropbox-menu');
     });
 
-    document.getElementById("btn-add-dropbox-file-request").addEventListener("click", function () {
+    document.getElementById("btn-add-dropbox-file-request").addEventListener("click", () => {
         showSection('dropbox-add-file-request');
     });
+
+    document.getElementById('btn-exit-dropbox').addEventListener('click', (evt) => {
+        evt.preventDefault();
+        resetForm('form-add-dropbox-file-request', true);
+        showSection('menu');
+    });
+
+    document.getElementById('btn-cancel-dropbox-add-file-request').addEventListener('click', (evt) => {
+        evt.preventDefault();
+        resetForm('form-add-dropbox-file-request', true);
+        showSection('dropbox-menu');
+    });
+}
+
+function resetForm(id, clearInputs) {
+    const aForm = document.getElementById(id);
+    aForm.setAttribute('aria-busy', 'false');
+    aForm.setAttribute('disabled', 'false');
+
+    if (clearInputs) {
+        switch (id) {
+            case 'form-add-dropbox-file-request':
+                document.getElementById('txt-filerequest-title').value = '';
+                document.getElementById('txt-filerequest-desc').value = '';
+                break;
+        }
+    }
 }
 
 function setupForms() {
@@ -45,6 +72,7 @@ function setupForms() {
         evt.preventDefault();
         
         formDbx.setAttribute('aria-busy', 'true');
+        formDbx.setAttribute('disabled', 'true');
 
         fetch('/api/dbx-add-file-request', {
             method: 'POST',
@@ -67,12 +95,13 @@ function setupForms() {
 
             window.Telegram.WebApp.showAlert('File request created', () => {
                 showSection('dropbox-menu');
+                resetForm('form-add-dropbox-file-request', true);
             });
         })
         .catch(() => {
-            formDbx.setAttribute('aria-busy', 'true');
-            console.log('Unable to add new file request');
-            window.Telegram.WebApp.showAlert('Unable to add new file request', () => {});
+            window.Telegram.WebApp.showAlert('Unable to add new file request', () => {
+                resetForm('form-add-dropbox-file-request', false);
+            });
         });
     });
 }
