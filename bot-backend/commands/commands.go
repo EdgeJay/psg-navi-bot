@@ -31,7 +31,7 @@ var mapping map[string]*CommandInfo
 func SendMessage(msg tgbotapi.MessageConfig, bot *tgbotapi.BotAPI) {
 	_, err := bot.Send(msg)
 	if err != nil {
-		log.Println("Webhook unable to send message")
+		log.Println("Webhook unable to send message", err)
 	}
 }
 

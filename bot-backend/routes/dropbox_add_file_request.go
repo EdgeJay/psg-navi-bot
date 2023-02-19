@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -100,11 +101,20 @@ func DropboxAddFileRequest(c *gin.Context) {
 	// get bot
 	bot, botErr := bot.NewTelegramBot()
 	if botErr == nil {
-		msg := tgbotapi.NewMessage(
-			int64(jwtUtil.GetUserID()),
+		/*
+			msg := tgbotapi.NewMessage(
+				int64(jwtUtil.GetUserID()),
+				fmt.Sprintf("File request created! Please use this link: %s", createdFileRequest.URL),
+			)
+		*/
+		msg := tgbotapi.NewMessageToChannel(
+			"@"+jwtUtil.GetUserName(),
 			fmt.Sprintf("File request created! Please use this link: %s", createdFileRequest.URL),
 		)
+
 		commands.SendMessage(msg, bot)
+	} else {
+		log.Println(botErr)
 	}
 
 	// response
