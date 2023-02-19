@@ -74,3 +74,14 @@ resource "aws_ssm_parameter" "dev_rsa_public" {
     environment = "dev"
   }
 }
+
+resource "aws_ssm_parameter" "dev_init_token_secret" {
+  name        = "/psg_navi_bot/dev/init_token_secret"
+  description = "Secret for comparing init token"
+  type        = "SecureString"
+  value       = var.init_token_secret
+
+  tags = {
+    environment = "dev"
+  }
+}

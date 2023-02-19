@@ -19,7 +19,9 @@ plan:
 
 apply:
 	terraform -chdir=infra/dev apply --auto-approve "plan_outfile"
-	curl -X POST "`terraform -chdir=infra/dev output -raw api_url`/init-bot"
+	curl -X POST \
+		--header "X-PSGNaviBot-Init-Token: `terraform -chdir=infra/dev output -raw app_version`" \
+		"`terraform -chdir=infra/dev output -raw api_url`/init-bot"
 	@printf "\n"
 
 destroy:
