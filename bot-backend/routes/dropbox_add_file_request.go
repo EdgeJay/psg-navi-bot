@@ -18,7 +18,7 @@ import (
 
 type AddFileRequest struct {
 	Title string `json:"title" binding:"required"`
-	Desc  string `json:"desc" binding:"max=200"`
+	Desc  string `json:"desc,omitempty" binding:"max=200"`
 }
 
 func DropboxAddFileRequest(c *gin.Context) {
@@ -84,7 +84,7 @@ func DropboxAddFileRequest(c *gin.Context) {
 		utils.GetDropboxAppSecret(),
 		utils.GetDropboxRefreshToken(),
 	)
-	createdFileRequest, fileReqErr := dbx.CreateFileRequest(payload.Title)
+	createdFileRequest, fileReqErr := dbx.CreateFileRequest(payload.Title, payload.Desc)
 
 	if fileReqErr != nil {
 		c.Abort()

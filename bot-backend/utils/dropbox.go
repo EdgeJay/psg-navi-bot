@@ -40,6 +40,7 @@ type DropboxFileRequestCreateParams struct {
 	Destination string `json:"destination"`
 	Open        bool   `json:"open"`
 	Title       string `json:"title"`
+	Desc        string `json:"description,omitempty"`
 }
 
 type DropboxFileRequestCreateResponse struct {
@@ -171,11 +172,13 @@ func (dbx *DropboxClient) GetFileRequests() (*DropboxFileRequests, error) {
 	return &parsedResponse.FileRequests, nil
 }
 
-func (dbx *DropboxClient) CreateFileRequest(name string) (*DropboxFileRequestCreateResponse, error) {
+func (dbx *DropboxClient) CreateFileRequest(name, desc string) (*DropboxFileRequestCreateResponse, error) {
 	params := DropboxFileRequestCreateParams{}
 	params.Destination = fmt.Sprintf("/file_requests/%s", name)
 	params.Title = name
+	params.Desc = desc
 	params.Open = true
+
 	res, err := dbx.DoPostRequest("/file_requests/create", params, true)
 	if err != nil {
 		log.Printf("Unable to create file request: %s\n", err.Error())

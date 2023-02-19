@@ -26,7 +26,7 @@ func HandleDropboxFileRequest(update *tgbotapi.Update, bot *tgbotapi.BotAPI, par
 			utils.GetDropboxRefreshToken(),
 		)
 
-		if createdFileRequest, err := dbx.CreateFileRequest(fileRequestName); err == nil {
+		if createdFileRequest, err := dbx.CreateFileRequest(fileRequestName, ""); err == nil {
 			msg = tgbotapi.NewMessage(
 				update.CallbackQuery.Message.Chat.ID,
 				fmt.Sprintf("File request created! Please use this link: %s", createdFileRequest.URL),
