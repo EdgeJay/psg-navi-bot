@@ -1,0 +1,16 @@
+package auth
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestGetUserID(t *testing.T) {
+	tokenStr := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0Z1VzZXJJZCI6ODcxODMzNzk3LCJpc3MiOiJwc2duYXZpYm90LnNnIiwic3ViIjoiaGp3dXNnIiwiZXhwIjoxNjc2NzgyOTkzLCJuYmYiOjE2NzY3NzkzOTMsImlhdCI6MTY3Njc3OTM5MywianRpIjoiYTUwZGIzNzMtNmViZS00N2RiLTk4MjktNmQ2OTU0MjgzOGMxIn0.tTtf_LrbSNEZwKBDzconWUOi9fiWfjYRXrRALdxORIaIUslWMUmoibaWyOeRgTFyEdrcG7x4U0-SkcM25EzgmOCtqo43VpktznpJdC499Np5sN3YYUjqHDC-tiNuVX9RsaNbyQag3RBfvJerAssi6jY0tiGP0eLx1r0CfTe1yY0Lhcr6-1gBgclGui5aJGWUEYOshBbCV5MQS1iNNaa9BdgWjGZv-SRkLao66FdRphx53br6UMbWmoU50a7QL6RJM5yif5ilkqBjSS_DOljF3gUoZ89zYtLIPMnkcHE8Gx74_K_BLjMFmWpmyR8LQ7d54vN9agVZtQ1GKtQKhCxRDw"
+	token, tokenErr := ParseTokenFromFile(tokenStr)
+	assert.Nil(t, tokenErr)
+
+	jwtUtil := NewJwtUtil(token)
+	assert.EqualValues(t, 871833797, jwtUtil.GetUserID())
+}

@@ -1,6 +1,12 @@
 package auth
 
-import "github.com/golang-jwt/jwt/v4"
+import (
+	"fmt"
+	"log"
+	"strconv"
+
+	"github.com/golang-jwt/jwt/v4"
+)
 
 type JwtUtil struct {
 	Token *jwt.Token
@@ -29,15 +35,18 @@ func (u *JwtUtil) GetUserName() string {
 func (u *JwtUtil) GetUserID() int64 {
 	claims, ok := u.Token.Claims.(jwt.MapClaims)
 	if !ok {
+		log.Println("cannot cast to jwt.MapClaims")
 		return 0
 	}
 
-	sub, ok := claims["tgUserId"].(int64)
-	if !ok {
+	s := fmt.Sprintf("%.0f", claims["tgUserId"])
+	v, err := strconv.Atoi(s)
+	if err != nil {
+		log.Println(`cannot cast "tgUserId" to int64`)
 		return 0
 	}
 
-	return sub
+	return int64(v)
 }
 
 func (u *JwtUtil) TokenIsValid() bool {
