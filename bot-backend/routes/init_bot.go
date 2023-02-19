@@ -18,13 +18,13 @@ func InitBot(c *gin.Context) {
 		"invalid_init_token_secret",
 	)
 
-	if hashed, err := utils.CreateHmacHexString(utils.GetAppEnv(), []byte(tokenSecret)); err != nil {
+	if hashed, err := utils.CreateHmacHexString(utils.GetAppVersion(), []byte(tokenSecret)); err != nil {
 		c.Abort()
-		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden[1]"})
 		return
 	} else if hashed != token {
 		c.Abort()
-		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden[2]"})
 		return
 	}
 

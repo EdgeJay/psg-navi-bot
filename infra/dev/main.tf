@@ -44,6 +44,10 @@ variable "cookie_duration" {
   description = "Duration of cookies in seconds"
 }
 
+variable "init_token_secret" {
+  description = "Secret for comparing init token"
+}
+
 locals {
   app_id = "${lower(var.app_name)}-${lower(var.app_env)}-${random_id.unique_suffix.hex}"
 }
@@ -80,4 +84,8 @@ output "api_url" {
 
 output "app_version" {
   value = aws_lambda_function.lambda_func.environment[0].variables.app_version
+}
+
+output "init_token_secret" {
+  value = var.init_token_secret
 }
