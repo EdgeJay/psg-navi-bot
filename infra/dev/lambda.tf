@@ -65,7 +65,8 @@ data "aws_iam_policy_document" "lambda_ssm_policy_document" {
       "${aws_ssm_parameter.dev_openai_api_key.arn}",
       "${aws_ssm_parameter.dev_rsa_private.arn}",
       "${aws_ssm_parameter.dev_rsa_public.arn}",
-      "${aws_ssm_parameter.dev_init_token_secret.arn}"
+      "${aws_ssm_parameter.dev_init_token_secret.arn}",
+      "${aws_ssm_parameter.dev_config_admins.arn}"
     ]
   }
 

@@ -85,3 +85,14 @@ resource "aws_ssm_parameter" "dev_init_token_secret" {
     environment = "dev"
   }
 }
+
+resource "aws_ssm_parameter" "dev_config_admins" {
+  name        = "/psg_navi_bot/dev/config_admins"
+  description = "Admin config stored in json"
+  type        = "SecureString"
+  value       = "${base64encode(data.local_file.config_admins.content)}"
+
+  tags = {
+    environment = "dev"
+  }
+}

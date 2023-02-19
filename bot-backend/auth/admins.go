@@ -1,42 +1,53 @@
 package auth
 
-type Admin struct {
-	UserName string
-	Scope    []Scope
-}
+import (
+	"encoding/base64"
+	"encoding/json"
+	"log"
 
-type AdminManager struct {
-	Admins []Admin
-}
-
-type Scope struct {
-	Domain string
-	Task   string
-}
-
-const (
-	DomainDropbox = "dropbox"
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/aws"
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 )
 
-const AllTasksPermission = "all"
+var adminManager *AdminManager
 
-// dropbox tasks
-const (
-	AddFileRequest = "add-file-request"
-)
-
-func NewAdminManager() *AdminManager {
-	admins := []Admin{}
-	admins = append(admins, Admin{
-		UserName: "hjwusg",
-		Scope: []Scope{
-			{"dropbox", "all"},
-		},
-	})
-
-	return &AdminManager{
-		Admins: admins,
+func NewAdminManagerFromB64Json(data string) (*AdminManager, error) {
+	// decode from B64 string first
+	decoded, err := base64.StdEncoding.DecodeString(data)
+	if err != nil {
+		return nil, err
 	}
+	return NewAdminManagerFromJson(decoded)
+}
+
+func NewAdminManagerFromJson(data []byte) (*AdminManager, error) {
+	var am AdminManager
+	if err := json.Unmarshal(data, &am); err != nil {
+		return nil, err
+	}
+	return &am, nil
+}
+
+func NewAdminManager() (*AdminManager, error) {
+	if adminManager != nil {
+		return adminManager, nil
+	}
+
+	cfgBase64 := aws.GetStringParameter(
+		utils.GetAWSParamStoreKeyName("config_admins"),
+		"",
+	)
+
+	am, err := NewAdminManagerFromB64Json(cfgBase64)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Printf("init NewAdminManager with %d admin(s)\n", len(am.Admins))
+
+	adminManager = am
+
+	return adminManager, nil
 }
 
 func (am *AdminManager) CanPerformTask(username, domain, task string) bool {

@@ -66,6 +66,10 @@ data "local_file" "rsa_public" {
   filename = "../../bot-backend/certs/rsa_public.pem"
 }
 
+data "local_file" "config_admins" {
+  filename = "../../config/admins.json"
+}
+
 resource "random_id" "unique_suffix" {
   byte_length = 2
 }

@@ -49,7 +49,18 @@ func DropboxAddFileRequest(c *gin.Context) {
 	}
 
 	// check if user has permission to perform task
-	adminManager := auth.NewAdminManager()
+	adminManager, err := auth.NewAdminManager()
+	if err != nil {
+		c.Abort()
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"error": "Unable to fetch permissions",
+			},
+		)
+		return
+	}
+
 	if !adminManager.CanPerformTask(userName, auth.DomainDropbox, auth.AddFileRequest) {
 		if userName == "" {
 			c.Abort()
