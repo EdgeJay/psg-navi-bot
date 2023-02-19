@@ -11,7 +11,6 @@ resource "aws_lambda_function" "lambda_func" {
       app_env               = var.app_env
       app_version           = "${var.app_version}-${random_id.app_version_suffix.hex}"
       lambda_invoke_url     = var.lambda_invoke_url
-      interaction_mode      = var.interaction_mode
       cookie_duration       = var.cookie_duration
     }
   }

@@ -26,18 +26,6 @@ func IsProductionEnv() bool {
 	return GetAppEnv() == "prod"
 }
 
-func GetInteractionMode() string {
-	return os.Getenv("interaction_mode")
-}
-
-func IsWebAppMode() bool {
-	return GetInteractionMode() == "webapp"
-}
-
-func IsCommandsMode() bool {
-	return GetInteractionMode() == "commands"
-}
-
 func GetTelegramBotToken() string {
 	token := aws.GetStringParameter(
 		getAWSParamStoreKeyName("telegram_api_token"),

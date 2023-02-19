@@ -40,11 +40,6 @@ variable "lambda_invoke_url" {
   description = "Url to invoke Lambda function"
 }
 
-variable "interaction_mode" {
-  description = "Primary mode of interaction bot should use, can be webapp or commands"
-  default     = "commands"
-}
-
 variable "cookie_duration" {
   description = "Duration of cookies in seconds"
 }

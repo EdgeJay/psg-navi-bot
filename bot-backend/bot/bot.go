@@ -1,9 +1,7 @@
 package bot
 
 import (
-	"fmt"
 	"log"
-	"time"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 
@@ -25,7 +23,10 @@ type BotInfo struct {
 
 func setupWebHook(bot *tgbotapi.BotAPI) {
 	// re-setup webhook
-	newWebHook, err := tgbotapi.NewWebhookWithCert(utils.GetLambdaInvokeUrl()+"/bot"+utils.GetTelegramBotToken(), nil)
+	newWebHook, err := tgbotapi.NewWebhookWithCert(
+		utils.GetLambdaInvokeUrl()+"/bot"+utils.GetTelegramBotToken(),
+		nil,
+	)
 
 	if err != nil {
 		log.Println("unable to create new webhook", err)
@@ -42,10 +43,27 @@ func setupWebHook(bot *tgbotapi.BotAPI) {
 	}
 }
 
-func setupCommands(bot *tgbotapi.BotAPI) {
+func deleteCommands(bot *tgbotapi.BotAPI) error {
+	// delete previously set commands
+	delCmdCfg := tgbotapi.NewDeleteMyCommands()
+	_, err := bot.Request(delCmdCfg)
+	if err != nil {
+		log.Println("Delete bot commands failed", err)
+		return err
+	}
+	log.Println("Bot commands deleted")
+
+	return nil
+}
+
+func setupCommands(bot *tgbotapi.BotAPI) error {
+	delErr := deleteCommands(bot)
+	if delErr != nil {
+		return delErr
+	}
+
 	// get list of available commands
 	commands := commands.GetCommands(commands.CATEGORY_ALL)
-
 	botCommands := make([]tgbotapi.BotCommand, 0)
 
 	for cmd, info := range commands {
@@ -56,22 +74,13 @@ func setupCommands(bot *tgbotapi.BotAPI) {
 	}
 
 	cfg := tgbotapi.NewSetMyCommands(botCommands...)
-
 	if _, err := bot.Request(cfg); err != nil {
-		log.Fatal("Set bot commands failed", err)
-	} else {
-		log.Println("Bot commands registered", err)
+		log.Println("Set bot commands failed", err)
+		return err
 	}
-}
+	log.Println("Bot commands registered")
 
-func setupWebApp(bot *tgbotapi.BotAPI) {
-	url := utils.GetLambdaInvokeUrl() + "/menu?r=" + fmt.Sprint((time.Now()).UnixNano())
-	cfg := NewSetChatMenuButtonConfig(url)
-	if params, err := cfg.Params(); err != nil {
-		log.Fatal(err)
-	} else {
-		bot.MakeRequest(cfg.Method(), params)
-	}
+	return nil
 }
 
 func NewTelegramBot() (*tgbotapi.BotAPI, error) {
@@ -102,12 +111,15 @@ func InitTelegramBot() (*tgbotapi.BotAPI, error) {
 	}
 
 	setupWebHook(newBot)
+	setupCommands(newBot)
 
-	if utils.IsCommandsMode() {
-		setupCommands(newBot)
-	} else if utils.IsWebAppMode() {
-		setupWebApp(newBot)
-	}
+	/*
+		if utils.IsCommandsMode() {
+			setupCommands(newBot)
+		} else if utils.IsWebAppMode() {
+			setupWebApp(newBot)
+		}
+	*/
 
 	return bot, err
 }

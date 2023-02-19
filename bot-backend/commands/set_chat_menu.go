@@ -1,4 +1,4 @@
-package bot
+package commands
 
 // SetChatMenuButtonConfig changes the bot's menu button in a private chat,
 // or the default menu button.
@@ -38,8 +38,9 @@ type SetChatMenuButtonConfig struct {
 	MenuButton *MenuButton
 }
 
-func NewSetChatMenuButtonConfig(url string) SetChatMenuButtonConfig {
+func NewSetChatMenuButtonConfig(url string, chatID int64) SetChatMenuButtonConfig {
 	cfg := SetChatMenuButtonConfig{}
+	cfg.ChatID = chatID
 	cfg.MenuButton = &MenuButton{
 		Type: "web_app",
 		Text: "Start",

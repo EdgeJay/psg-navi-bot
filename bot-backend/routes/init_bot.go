@@ -16,8 +16,8 @@ func InitBot(c *gin.Context) {
 		c.JSON(
 			http.StatusOK,
 			gin.H{
-				"status":           "ok",
-				"interaction_mode": utils.GetInteractionMode(),
+				"status":  "ok",
+				"version": utils.GetAppVersion(),
 			},
 		)
 	}
