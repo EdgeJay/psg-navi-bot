@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/auth"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/middlewares"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 )
@@ -22,6 +23,7 @@ func NewRouter() *gin.Engine {
 		middlewares.CheckSession,
 		middlewares.CheckCsrf,
 		middlewares.CheckJwt,
+		middlewares.GetCheckAdminPermissionFunc(auth.DomainDropbox, auth.AddFileRequest),
 		DropboxAddFileRequest,
 	)
 
