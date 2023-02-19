@@ -44,6 +44,10 @@
                 <i data-feather="plus-circle"></i>
                 <label>Add File Request</label>
             </button>
+            <button id="btn-list-dropbox-file-requests">
+                <i data-feather="list"></i>
+                <label>List File Requests</label>
+            </button>
         </section>
         <section id="section-dropbox-add-file-request" class="menu hidden">
             <form id="form-add-dropbox-file-request">
@@ -58,6 +62,18 @@
                 <button type="submit">Create</button>
                 <button id="btn-cancel-dropbox-add-file-request" class="secondary">Cancel</button>
             </form>
+        </section>
+        <section id="section-dropbox-list-file-requests" class="menu hidden">
+            <table role="grid">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="table-dropbox-list-file-requests"></tbody>
+            </table>
         </section>
     </main>
     <footer class="version">

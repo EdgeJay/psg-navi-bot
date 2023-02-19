@@ -28,6 +28,27 @@ function startSession() {
     });
 }
 
+function fetchListFileRequests() {
+    fetch('/api/dbx-list-file-requests', {
+        method: 'GET',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-PSGNaviBot-Csrf-Token': window.__token,
+        },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data);
+    })
+    .catch(() => {
+        window.Telegram.WebApp.showAlert('Unable to fetch list of file requests', () => {
+            showSection('dropbox-menu');
+        });
+    });
+}
+
 function setupMenu() {
     document.getElementById("btn-dropbox").addEventListener("click", () => {
         showSection('dropbox-menu');
@@ -35,6 +56,11 @@ function setupMenu() {
 
     document.getElementById("btn-add-dropbox-file-request").addEventListener("click", () => {
         showSection('dropbox-add-file-request');
+    });
+
+    document.getElementById('btn-list-dropbox-file-requests').addEventListener("click", () => {
+        showSection('dropbox-list-file-requests');
+        fetchListFileRequests();
     });
 
     document.getElementById('btn-exit-dropbox').addEventListener('click', (evt) => {

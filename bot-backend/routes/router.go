@@ -26,6 +26,14 @@ func NewRouter() *gin.Engine {
 		middlewares.GetCheckAdminPermissionFunc(auth.DomainDropbox, auth.AddFileRequest),
 		DropboxAddFileRequest,
 	)
+	router.GET(
+		"/dbx-list-file-requests",
+		middlewares.CheckSession,
+		middlewares.CheckCsrf,
+		middlewares.CheckJwt,
+		middlewares.GetCheckAdminPermissionFunc(auth.DomainDropbox, auth.ListFileRequests),
+		DropboxListFileRequests,
+	)
 
 	// diagnostic and setup endpoints
 	router.GET("/env", Env)

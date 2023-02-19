@@ -22,5 +22,6 @@ const AllTasksPermission = "all"
 
 // dropbox tasks
 const (
-	AddFileRequest = "add-file-request"
+	AddFileRequest   = "add-file-request"
+	ListFileRequests = "list-file-requests"
 )

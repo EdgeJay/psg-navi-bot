@@ -32,6 +32,8 @@ func doInitBot(url, hashed string) {
 	if res, err := client.Do(req); err != nil {
 		log.Fatalln("request failed:", err)
 	} else {
+		defer res.Body.Close()
+
 		var initResponse InitResponse
 		if err := json.NewDecoder(res.Body).Decode(&initResponse); err != nil {
 			log.Fatalln("invalid response:", err)
