@@ -18,11 +18,14 @@ func ParseCallbackQuery(update *tgbotapi.Update, bot *tgbotapi.BotAPI) *Callback
 		// check if data is json string
 		if strings.Index(update.CallbackQuery.Data, "{") == 0 {
 			decoded := MakeDropboxFileRequestInlineQueryData{}
+			log.Println(update.CallbackQuery.Data)
 			err := json.Unmarshal([]byte(update.CallbackQuery.Data), &decoded)
 			if err == nil {
 				info := &CallbackQueryInfo{}
 				info.QueryType = decoded.QueryType
 				info.Params = []string{decoded.Data.RequestName}
+			} else {
+				log.Println(err)
 			}
 		} else {
 			parts := strings.Split(update.CallbackQuery.Data, ",")
