@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { Router, Link, Route } from "svelte-routing";
+  import Home from './routes/Home.svelte';
   import Footer from './lib/Footer.svelte';
 
   onMount(() => {
@@ -10,6 +12,9 @@
 </script>
 
 <main class="container">
+  <Router>
+    <Route path="/"><Home /></Route>
+  </Router>
   <Footer />
 </main>
 

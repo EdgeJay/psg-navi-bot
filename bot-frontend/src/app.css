@@ -12,34 +12,9 @@ html, body {
   font-size: 16px;
 }
 
-section.hidden {
-  display: none;
-}
-
-section.menu button {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: center;
-}
-
-section.menu button i {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  font-size: 3rem;
-}
-
-section.menu button svg {
+button svg {
   margin: 0.4375rem 0;
   width: 2.5rem;
   height: 2.5rem;
   margin-right: 0.625rem;
-}
-
-section.menu button label {
-  font-size: 1.25rem;
-  cursor: pointer;
 }
