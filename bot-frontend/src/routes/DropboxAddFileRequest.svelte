@@ -15,7 +15,7 @@
       </label>
       <label for="txt-filerequest-desc">
           File Request Description
-          <textarea id="txt-filerequest-desc" name="txt-filerequest-desc" maxlength="200" rows="8"></textarea>
+          <textarea id="txt-filerequest-desc" name="txt-filerequest-desc" maxlength="200" rows="5"></textarea>
       </label>
       <button type="submit">Create</button>
       <button on:click={handleCancel} class="secondary">Cancel</button>
