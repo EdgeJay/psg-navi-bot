@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Router, Link, Route } from "svelte-routing";
+  import { Router, Route } from "svelte-routing";
   import Home from './routes/Home.svelte';
+  import Dropbox from './routes/Dropbox.svelte';
+  import DropboxAddFileRequest from './routes/DropboxAddFileRequest.svelte';
   import Footer from './lib/Footer.svelte';
 
   onMount(() => {
@@ -13,6 +15,8 @@
 
 <main class="container">
   <Router>
+    <Route path="dropbox"><Dropbox /></Route>
+    <Route path="dbx-add-file-request"><DropboxAddFileRequest /></Route>
     <Route path="/"><Home /></Route>
   </Router>
   <Footer />

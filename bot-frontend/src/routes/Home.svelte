@@ -3,6 +3,10 @@
 </script>
 
 <section>
-  <MenuButton iconType="devicons" icon="dropbox" label="Dropbox" />
-  <MenuButton iconType="feather" icon="help-circle" label="Ask me a question" />
+  <MenuButton to="dropbox" iconType="devicons" icon="dropbox">
+    <span slot="label">Dropbox</span>
+  </MenuButton>
+  <MenuButton to="help" iconType="feather" icon="help-circle">
+    <span slot="label">Ask me a question</span>
+  </MenuButton>
 </section>
