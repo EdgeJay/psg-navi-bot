@@ -11,7 +11,6 @@
   $: charsLeft = maxChars - desc.length;
 
   function handleSubmit() {
-    console.log('form submit');
     console.log(title, desc);
     busy = true;
   }

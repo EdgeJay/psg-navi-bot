@@ -93,3 +93,7 @@ output "app_version" {
 output "init_token_secret" {
   value = var.init_token_secret
 }
+
+output "cloudfront_domain" {
+  value = aws_cloudfront_distribution.psgnavibot_s3_distribution.domain_name
+}
