@@ -52,6 +52,9 @@ func main() {
 	tokenSecret := flag.String("secret", "invalid_init_token_secret", "init token secret")
 	flag.Parse()
 
+	log.Println("api_url:", *url)
+	log.Println("appVersion:", *appVersion)
+
 	if hashed, err := utils.CreateHmacHexString(*appVersion, []byte(*tokenSecret)); err != nil {
 		log.Fatalln("unable to generate hmac hex string", err)
 	} else {

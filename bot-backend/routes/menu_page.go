@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Menu(c *gin.Context) {
+func MenuPage(c *gin.Context) {
 	// find key in context to prove that session is properly set
 	sess, exists := c.Get(middlewares.PsgNaviBotSessionName)
 

@@ -35,7 +35,7 @@ resource "aws_s3_object" "css" {
   for_each = fileset("../../bot-frontend/dist/assets/", "*.css")
 
   bucket       = aws_s3_bucket.psgnavibot.bucket
-  key          = "/${random_id.app_version_suffix.hex}/assets/${each.value}"
+  key          = "/assets/${each.value}"
   source       = "../../bot-frontend/dist/assets/${each.value}"
   etag         = filemd5("../../bot-frontend/dist/assets/${each.value}")
   acl          = "public-read"
@@ -46,7 +46,7 @@ resource "aws_s3_object" "js" {
   for_each = fileset("../../bot-frontend/dist/assets/", "*.js")
 
   bucket       = aws_s3_bucket.psgnavibot.bucket
-  key          = "/${random_id.app_version_suffix.hex}/assets/${each.value}"
+  key          = "/assets/${each.value}"
   source       = "../../bot-frontend/dist/assets/${each.value}"
   etag         = filemd5("../../bot-frontend/dist/assets/${each.value}")
   acl          = "public-read"
