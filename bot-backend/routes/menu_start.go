@@ -3,13 +3,15 @@ package routes
 import (
 	"net/http"
 
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/cookies"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/middlewares"
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func MenuStart(c *gin.Context) {
 	// find key in context to prove that session is properly set
-	_, exists := c.Get(middlewares.PsgNaviBotSessionName)
+	sess, exists := c.Get(middlewares.PsgNaviBotSessionName)
 
 	if !exists {
 		c.Abort()
@@ -22,5 +24,11 @@ func MenuStart(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusTemporaryRedirect, "/api/menu/home")
+	menuSession := (sess).(*cookies.MenuSession)
+
+	// return HTML output
+	c.HTML(http.StatusOK, "start.html", gin.H{
+		"token":   menuSession.Checksum,
+		"version": utils.GetAppVersion(),
+	})
 }
