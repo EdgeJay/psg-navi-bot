@@ -4,4 +4,7 @@ interface Window {
   feather: {
     replace: () => void;
   };
+  cookieStore: {
+    get: (name: string) => Promise<string>
+  },
 }
