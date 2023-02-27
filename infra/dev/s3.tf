@@ -65,6 +65,17 @@ resource "aws_s3_object" "html" {
   content_type = "text/html"
 }
 
+resource "aws_s3_object" "index_html" {
+  for_each = fileset("../../bot-frontend/dist/", "index.html")
+
+  bucket       = aws_s3_bucket.psgnavibot.bucket
+  key          = "${each.value}"
+  source       = "../../bot-frontend/dist/${each.value}"
+  etag         = filemd5("../../bot-frontend/dist/${each.value}")
+  acl          = "public-read"
+  content_type = "text/html"
+}
+
 # Upload favicon
 resource "aws_s3_object" "favicon" {
   for_each = fileset("./static/", "*.ico")
