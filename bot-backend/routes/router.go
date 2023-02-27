@@ -16,7 +16,7 @@ func NewRouter() *gin.Engine {
 
 	// menu
 	router.GET("/menu-start", middlewares.StartSession, MenuStart)
-	router.GET("/menu/:page", middlewares.CheckSession, MenuPage)
+	// router.GET("/menu/:page", middlewares.CheckSession, MenuPage)
 	router.POST("/init-menu-session", middlewares.CheckSession, middlewares.CheckCsrf, InitMenuSession)
 	// dropbox
 	router.POST(
