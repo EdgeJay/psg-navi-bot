@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { appVersion } from '../stores/global';
+  import { appInfo } from '../stores/global';
 </script>
 
 <footer class="version">
-  Version {$appVersion}
+  Version {$appInfo ? $appInfo.ver : ''}
 </footer>
 
 <style>
