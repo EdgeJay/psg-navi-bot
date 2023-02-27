@@ -9,14 +9,30 @@ import (
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/auth"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/bot"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/cookies"
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/middlewares"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 )
+
+const CsrfCookieName = "cs"
 
 type InitMenuSessionPayload struct {
 	InitData string `json:"init_data"`
 }
 
 func InitMenuSession(c *gin.Context) {
+	sess, exists := c.Get(middlewares.PsgNaviBotSessionName)
+	if !exists {
+		c.Abort()
+		c.JSON(
+			http.StatusUnauthorized,
+			gin.H{
+				"error": "Missing bot menu session",
+			},
+		)
+		return
+	}
+	menuSession := (sess).(*cookies.MenuSession)
+
 	// get payload
 	var payload InitMenuSessionPayload
 	if err := c.BindJSON(&payload); err != nil {
@@ -72,7 +88,22 @@ func InitMenuSession(c *gin.Context) {
 		return
 	}
 
+	// save jwt token into cookie
 	cookies.SetJwtCookie(c, token, domain, tokenDuration)
+
+	// save csrf token for frontend app to pick up
+	cookies.SetStrictSameSiteCookie(
+		c,
+		gin.H{
+			"val": menuSession.Checksum,
+			"ver": utils.GetAppVersion(),
+		},
+		CsrfCookieName,
+		"/",
+		domain,
+		utils.GetCookieDuration(),
+		false,
+	)
 
 	c.JSON(
 		http.StatusOK,
