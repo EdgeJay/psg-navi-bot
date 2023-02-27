@@ -1,21 +1,15 @@
 import { readable, writable } from 'svelte/store';
 
-export const appVersion = readable('', function start(set) {
-  if (window.__version.startsWith('{{')) {
-    set('0.0.0');
-  } else {
-    set(window.__version);
-  }
+interface AppInfo {
+  val: string;
+  ver: string;
+}
 
-  return function stop() {};
-});
-
-export const appToken = readable('', function start(set) {
-  if (window.__token.startsWith('{{')) {
-    set('0.0.0');
-  } else {
-    set(window.__token);
-  }
+export const appInfo = readable<AppInfo>(undefined, function start(set) {
+  window.cookieStore.get('cs').then((data) => {
+    const appInfo = JSON.parse(decodeURIComponent(data.value));
+    set(appInfo);
+  });
 
   return function stop() {};
 });
