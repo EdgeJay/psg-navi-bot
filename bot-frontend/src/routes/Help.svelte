@@ -1,0 +1,3 @@
+<section>
+  <p>Coming soon</p>
+</section>
