@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { navigate } from 'svelte-routing';
   import NavBar from "../lib/NavBar.svelte";
+  import { appInfo } from "../stores/global";
 
   const maxChars = 200;
 
@@ -11,8 +13,36 @@
   $: charsLeft = maxChars - desc.length;
 
   function handleSubmit() {
-    console.log(title, desc);
     busy = true;
+
+    fetch('/api/dbx-add-file-request', {
+      method: 'POST',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-PSGNaviBot-Csrf-Token': $appInfo.val,
+      },
+      body: JSON.stringify({
+        title,
+        desc,
+      })
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status !== 'ok') {
+        throw new Error('Add new file request failed');
+      }
+      
+      window.Telegram.WebApp.showAlert('File request created', () => {
+        navigate('dropbox', { replace: true });
+      });
+    })
+    .catch(() => {
+      window.Telegram.WebApp.showAlert('Unable to add new file request', () => {
+        busy = false;
+      });
+    });
   }
 
   function handleCancel() {

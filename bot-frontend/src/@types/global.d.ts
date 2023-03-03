@@ -17,4 +17,9 @@ interface Window {
   cookieStore: {
     get: (name: string) => Promise<Cookie>
   },
+  Telegram: {
+    WebApp: {
+      showAlert: (message: string, callback: () => void) => void,
+    },
+  },
 }
