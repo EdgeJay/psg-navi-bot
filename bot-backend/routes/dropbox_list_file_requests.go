@@ -3,6 +3,7 @@ package routes
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -10,9 +11,12 @@ import (
 )
 
 type FileRequest struct {
-	ID    string `json:"id"`
-	Title string `json:"title"`
-	Url   string `json:"url"`
+	ID        string    `json:"id"`
+	Title     string    `json:"title"`
+	Desc      string    `json:"desc"`
+	CreatedOn time.Time `json:"created_on"`
+	Url       string    `json:"url"`
+	FileCount int       `json:"file_count"`
 }
 
 type ListFileRequestsResponse struct {
@@ -36,9 +40,12 @@ func DropboxListFileRequests(c *gin.Context) {
 		for _, fileRequest := range *allFileRequests {
 			if fileRequest.IsOpen {
 				fileReq := FileRequest{
-					ID:    fileRequest.ID,
-					Title: fileRequest.Title,
-					Url:   fileRequest.URL,
+					ID:        fileRequest.ID,
+					Title:     fileRequest.Title,
+					Desc:      fileRequest.Description,
+					CreatedOn: fileRequest.Created,
+					Url:       fileRequest.URL,
+					FileCount: fileRequest.FileCount,
 				}
 				response.FileRequests = append(response.FileRequests, fileReq)
 			}

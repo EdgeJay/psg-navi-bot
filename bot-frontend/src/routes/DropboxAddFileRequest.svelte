@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { navigate } from 'svelte-routing';
   import NavBar from "../lib/NavBar.svelte";
   import { appInfo } from "../stores/global";
@@ -12,6 +13,12 @@
 
   $: charsLeft = maxChars - desc.length;
 
+  let csrfToken = '';
+  onMount(async () => {
+    await appInfo.fetch();
+    csrfToken = $appInfo.val;
+  });
+
   function handleSubmit() {
     busy = true;
 
@@ -21,7 +28,7 @@
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
-        'X-PSGNaviBot-Csrf-Token': $appInfo.val,
+        'X-PSGNaviBot-Csrf-Token': csrfToken,
       },
       body: JSON.stringify({
         title,
