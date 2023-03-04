@@ -12,3 +12,9 @@ dropbox_refresh_token = "<YOUR_DROPBOX_API_REFRESH_TOKEN>"
 openai_api_key = "<YOUR_OPENAI_API_KEY>"
 lambda_invoke_url = "<INVOKE_URL_OF_LAMBDA_FUNCTION>"
 ```
+
+## References
+
+### Cloudfront multiple origins
+
+https://github.com/sashee/cloudfront-multiple-origins/blob/master/main.tf

@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Menu(c *gin.Context) {
+func MenuStart(c *gin.Context) {
 	// find key in context to prove that session is properly set
 	sess, exists := c.Get(middlewares.PsgNaviBotSessionName)
 
@@ -27,7 +27,7 @@ func Menu(c *gin.Context) {
 	menuSession := (sess).(*cookies.MenuSession)
 
 	// return HTML output
-	c.HTML(http.StatusOK, "menu.html", gin.H{
+	c.HTML(http.StatusOK, "start.html", gin.H{
 		"token":   menuSession.Checksum,
 		"version": utils.GetAppVersion(),
 	})

@@ -1,0 +1,20 @@
+:root {
+  --fallback-bg-color: #fff;
+  --fallback-sec-bg-color: #8C8C8C;
+  --fallback-text-color: #000;
+  --fallback-link-color: #229ED9;
+  --fallback-hint-color: #8C8C8C;
+}
+
+html, body {
+  background-color: var(--tg-theme-bg-color, var(--fallback-bg-color));
+  color: var(--tg-theme-text-color, var(--fallback-text-color));
+  font-size: 16px;
+}
+
+button svg {
+  margin: 0.4375rem 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.625rem;
+}

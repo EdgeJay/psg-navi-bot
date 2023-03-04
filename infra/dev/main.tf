@@ -83,7 +83,7 @@ resource "random_id" "app_version_suffix" {
 }
 
 output "api_url" {
-  value = aws_api_gateway_deployment.api_deployment.invoke_url
+  value = "https://${aws_cloudfront_distribution.psgnavibot_s3_distribution.domain_name}/api"
 }
 
 output "app_version" {
@@ -92,4 +92,8 @@ output "app_version" {
 
 output "init_token_secret" {
   value = var.init_token_secret
+}
+
+output "cloudfront_domain" {
+  value = aws_cloudfront_distribution.psgnavibot_s3_distribution.domain_name
 }

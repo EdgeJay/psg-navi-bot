@@ -11,12 +11,12 @@ import (
 func NewRouter() *gin.Engine {
 	// create router
 	router := gin.Default()
-	router.Static("public", "./static")
 	router.LoadHTMLGlob("templates/*.html")
 
 	// menu
-	router.GET("/menu", middlewares.StartSession, Menu)
+	router.GET("/menu-start", middlewares.StartSession, MenuStart)
 	router.POST("/init-menu-session", middlewares.CheckSession, middlewares.CheckCsrf, InitMenuSession)
+
 	// dropbox
 	router.POST(
 		"/dbx-add-file-request",

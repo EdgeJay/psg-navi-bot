@@ -4,12 +4,15 @@ run:
 dev:
 	cd ./bot-backend && app_env=dev app_version=1.0.0 app_version=1.0.0 air
 
-build: clean build-backend
+build: clean build-frontend build-backend
+
+build-frontend:
+	cd ./bot-frontend && npm run build
 
 build-backend:
 	cd ./bot-backend && GOOS=linux GOARCH=amd64 go build -v -a -o build/dev/bin/app . && \
-		cp -r static build/dev/bin/ && \
-		cp -r templates build/dev/bin/
+		mkdir -p build/dev/bin/templates && \
+		cp ./templates/start.html build/dev/bin/templates/start.html
 
 init:
 	terraform -chdir=infra/dev init

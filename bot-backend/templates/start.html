@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PSGNaviBot</title>
+  <!-- The following script must be before other scripts -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+</body>
+<script>
+  window.__token = "{{ .token }}"
+
+  function startSession() {
+    // init session and get jwt token stored in cookies
+    fetch('/api/init-menu-session', {
+      method: 'POST',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-PSGNaviBot-Csrf-Token': window.__token,
+      },
+      body: JSON.stringify({
+        init_data: window.Telegram.WebApp.initData,
+      })
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status !== 'ok') {
+        window.Telegram.WebApp.showAlert('Invalid session', () => {
+          window.Telegram.WebApp.close();
+        });
+      } else {
+        window.location.href = "/?r={{ .version }}";
+      }
+    })
+    .catch(() => {
+      console.log('Unable to start session');
+      window.Telegram.WebApp.showAlert('Unable to start session', () => {
+        window.Telegram.WebApp.close();
+      });
+    });
+  }
+
+  window.addEventListener('load', startSession)
+</script>
+</html>
