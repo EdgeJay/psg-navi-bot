@@ -1,12 +1,6 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import NavBar from "../lib/NavBar.svelte";
   import MenuButton from "../lib/MenuButton.svelte";
-
-  onMount(() => {
-    // replace "i" elements with data-feather with svg icons
-    window.feather.replace();
-  });
 </script>
 
 <section>

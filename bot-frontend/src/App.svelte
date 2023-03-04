@@ -7,51 +7,52 @@
   import DropboxListFileRequests from './routes/DropboxListFileRequests.svelte';
   import Help from './routes/Help.svelte';
   import Footer from './lib/Footer.svelte';
+  import { appInfo } from './stores/global';
 
-  interface InitParams {
-    version?: string;
-    hash?: string;
+  interface InitResponse {
+    status: string;
+    ver: string;
   }
 
-  let busy = true
+  let busy = true;
 
-  onMount(() => {
+  let colorScheme = window.Telegram.WebApp.colorScheme;
+
+  onMount(async () => {
     console.log('app mounted');
 
     // Init session
-    fetch('/api/init-menu-session', {
-      method: 'POST',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        init_data: window.Telegram.WebApp.initData,
-      })
-    })
-    .then((res) => res.json())
-    .then((data) => {
+    try {
+      const res = await fetch('/api/init-menu-session', {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          init_data: window.Telegram.WebApp.initData,
+        })
+      });
+      const data = (await res.json()) as InitResponse;
       if (data.status !== 'ok') {
         window.Telegram.WebApp.showAlert('Invalid session', () => {
           window.Telegram.WebApp.close();
         });
       } else {
-        busy = false
+        busy = false;
+
+        // force app version shown in UI to be refreshed
+        appInfo.fetch();
       }
-    })
-    .catch(() => {
-      console.log('Unable to start session');
+    } catch (err: unknown) {
       window.Telegram.WebApp.showAlert('Unable to start session', () => {
         window.Telegram.WebApp.close();
       });
-    });
-
-    // replace "i" elements with data-feather with svg icons
-    window.feather.replace();
+    }
   });
 </script>
 
-<main class="container">
+<main class="container" data-theme={colorScheme}>
   <!-- Verify app version, init session first before showing rest of app -->
   {#if !busy}
     <Router>

@@ -53,6 +53,17 @@ resource "aws_s3_object" "js" {
   content_type = "application/javascript"
 }
 
+resource "aws_s3_object" "svg_icons" {
+  for_each = fileset("../../bot-frontend/dist/icons/", "*.svg")
+
+  bucket       = aws_s3_bucket.psgnavibot.bucket
+  key          = "/icons/${each.value}"
+  source       = "../../bot-frontend/dist/icons/${each.value}"
+  etag         = filemd5("../../bot-frontend/dist/icons/${each.value}")
+  acl          = "public-read"
+  content_type = "image/svg+xml"
+}
+
 # Upload default index and error html
 resource "aws_s3_object" "html" {
   for_each = fileset("./static/", "*.html")
@@ -71,7 +82,7 @@ resource "aws_s3_object" "index_html" {
   bucket        = aws_s3_bucket.psgnavibot.bucket
   key           = "${each.value}"
   source        = "../../bot-frontend/dist/${each.value}"
-  etag          = "${filemd5("../../bot-frontend/dist/${each.value}")}.${sha256(var.app_version)}"
+  etag          = format("%s.%s", filemd5("../../bot-frontend/dist/${each.value}"), sha256(format("%s-%s", var.app_version, random_id.app_version_suffix.hex)))
   acl           = "public-read"
   content_type  = "text/html"
   cache_control = "no-cache, max-age=0, s-maxage=0"

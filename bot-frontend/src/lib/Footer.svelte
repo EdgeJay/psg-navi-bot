@@ -1,16 +1,9 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { appInfo } from '../stores/global';
-
-  let appVersion = '';
-  onMount(async () => {
-    await appInfo.fetch();
-    appVersion = $appInfo.ver;
-  });
 </script>
 
 <footer class="version">
-  Version {appVersion}
+  Version {$appInfo.ver}
 </footer>
 
 <style>

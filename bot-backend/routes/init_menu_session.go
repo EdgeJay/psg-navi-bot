@@ -125,6 +125,7 @@ func InitMenuSession(c *gin.Context) {
 		http.StatusOK,
 		gin.H{
 			"status": "ok",
+			"ver":    utils.GetAppVersion(),
 		},
 	)
 }
