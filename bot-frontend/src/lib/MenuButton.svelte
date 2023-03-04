@@ -15,7 +15,7 @@
   {#if iconType === 'devicons'}
     <i class="devicons devicons-{icon}"></i>
   {:else if iconType === 'feather'}
-    <i data-feather="{icon}"></i>
+    <img src="/icons/{icon}.svg" alt={label} />
   {/if}
   <div class="label">
     <slot name="label">{label}</slot>
@@ -37,6 +37,14 @@
     width: 3.5rem;
     height: 3.5rem;
     font-size: 3rem;
+  }
+
+  button img {
+    margin: 0.4375rem 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-right: 0.625rem;
+    filter: invert(100%) sepia(1%) saturate(0%) hue-rotate(163deg) brightness(102%) contrast(102%);
   }
 
   button .label {

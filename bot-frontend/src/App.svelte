@@ -45,9 +45,6 @@
         window.Telegram.WebApp.close();
       });
     });
-
-    // replace "i" elements with data-feather with svg icons
-    window.feather.replace();
   });
 </script>
 
