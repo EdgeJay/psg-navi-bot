@@ -12,8 +12,12 @@ function createAppInfo() {
     subscribe,
     async fetch() {
       const data = await window.cookieStore.get('cs');
-      const appInfo = JSON.parse(decodeURIComponent(data.value));
-      set(appInfo);
+      if (data) {
+        const appInfo = JSON.parse(decodeURIComponent(data.value)) as AppInfo;
+        set(appInfo);
+      } else {
+        set({ val: '', ver: '' });
+      }
     }
   };
 }

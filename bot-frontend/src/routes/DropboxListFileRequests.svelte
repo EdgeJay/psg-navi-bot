@@ -4,12 +4,16 @@
   import { appInfo } from "../stores/global";
   import { fileRequests } from "../stores/dropbox";
 
-  let fetchFileRequestsPromise = Promise.resolve();
-  
-  onMount(async () => {
+  async function fetchFileRequests(): Promise<void> {
     await appInfo.fetch();
     const csrfToken = $appInfo.val;
-    fetchFileRequestsPromise = fileRequests.fetchAll(csrfToken);
+    return fileRequests.fetchAll(csrfToken);
+  }
+
+  let fetchFileRequestsPromise: Promise<void> | undefined;
+
+  onMount(() => {
+    fetchFileRequestsPromise = fetchFileRequests();
   });
 
   function titleClickHandler(url: string) {
@@ -31,18 +35,30 @@
           </tr>
       </thead>
       <tbody>
-        {#await fetchFileRequestsPromise}
-          <tr></tr>
-        {:then _} 
-          {#each $fileRequests as req}
+        {#if fetchFileRequestsPromise}
+          {#await fetchFileRequestsPromise}
             <tr>
-              <td><a href="{req.url}" on:click|preventDefault={titleClickHandler(req.url)}>{req.title}</a></td>
-              <td>{req.formattedCreatedOn}</td>
-              <td>{req.fileCount}</td>
-              <td></td>
+              <td colspan="4">
+                <p aria-busy>Fetching file requests...</p>
+              </td>
             </tr>
-          {/each}
-        {/await}
+          {:then _} 
+            {#each $fileRequests as req}
+              <tr>
+                <td><a href="{req.url}" on:click|preventDefault={titleClickHandler(req.url)}>{req.title}</a></td>
+                <td>{req.formattedCreatedOn}</td>
+                <td>{req.fileCount}</td>
+                <td></td>
+              </tr>
+            {/each}
+          {/await}
+        {:else}
+          <tr>
+            <td colspan="4">
+              <p aria-busy>Fetching file requests...</p>
+            </td>
+          </tr>
+        {/if}
       </tbody>
   </table>
 </section>
