@@ -16,6 +16,8 @@
 
   let busy = true;
 
+  let colorScheme = window.Telegram.WebApp.colorScheme;
+
   onMount(async () => {
     console.log('app mounted');
 
@@ -50,7 +52,7 @@
   });
 </script>
 
-<main class="container">
+<main class="container" data-theme={colorScheme}>
   <!-- Verify app version, init session first before showing rest of app -->
   {#if !busy}
     <Router>

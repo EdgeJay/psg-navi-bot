@@ -23,6 +23,7 @@ interface Window {
       showAlert: (message: string, callback: () => void) => void,
       openLink: (url: string) => void,
       close: () => void,
+      colorScheme: string,
     },
   },
 }
