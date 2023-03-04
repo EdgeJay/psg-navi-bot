@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/auth"
 )
 
 func CheckSession(c *gin.Context) {
@@ -23,5 +25,5 @@ func CheckSession(c *gin.Context) {
 		return
 	}
 
-	c.Set(PsgNaviBotSessionName, menuSession)
+	c.Set(auth.PsgNaviBotSessionName, menuSession)
 }

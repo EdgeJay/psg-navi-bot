@@ -16,6 +16,10 @@ variable "app_version" {
   description = "Application version"
 }
 
+variable "app_version_secret" {
+  description = "Secret to hash application version for verification purposes"
+}
+
 variable "bot_token" {
   description = "API token of Telegram bot"
 }

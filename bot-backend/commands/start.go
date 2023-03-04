@@ -14,7 +14,7 @@ func setupWebAppForUser(bot *tgbotapi.BotAPI, chatID int64) {
 		log.Fatal(err)
 	}
 
-	url := "https://" + domain + "/api/menu-start"
+	url := "https://" + domain + "/"
 	cfg := NewSetChatMenuButtonConfig(url, chatID)
 	if params, err := cfg.Params(); err != nil {
 		log.Fatal(err)

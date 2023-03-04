@@ -10,9 +10,7 @@ build-frontend:
 	cd ./bot-frontend && npm run build
 
 build-backend:
-	cd ./bot-backend && GOOS=linux GOARCH=amd64 go build -v -a -o build/dev/bin/app . && \
-		mkdir -p build/dev/bin/templates && \
-		cp ./templates/start.html build/dev/bin/templates/start.html
+	cd ./bot-backend && GOOS=linux GOARCH=amd64 go build -v -a -o build/dev/bin/app .
 
 init:
 	terraform -chdir=infra/dev init
