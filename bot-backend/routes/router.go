@@ -11,7 +11,6 @@ import (
 func NewRouter() *gin.Engine {
 	// create router
 	router := gin.Default()
-	// router.LoadHTMLGlob("templates/*.html")
 
 	// menu
 	router.POST("/init-menu-session", InitMenuSession)
