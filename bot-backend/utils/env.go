@@ -42,6 +42,10 @@ func GetTelegramBotToken() string {
 	return viper.GetString("bot_token")
 }
 
+func GetTelegramWebAppSecretKey() string {
+	return os.Getenv("telegram_webapp_secret_key")
+}
+
 func GetLambdaInvokeUrl() string {
 	return os.Getenv("lambda_invoke_url")
 }

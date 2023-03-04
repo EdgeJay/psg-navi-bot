@@ -52,6 +52,10 @@ variable "init_token_secret" {
   description = "Secret for comparing init token"
 }
 
+variable "telegram_webapp_secret_key" {
+  description = "Secret key for Telegram web app for validating initData"
+}
+
 locals {
   app_id = "${lower(var.app_name)}-${lower(var.app_env)}-${random_id.unique_suffix.hex}"
 }

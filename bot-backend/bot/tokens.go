@@ -103,6 +103,5 @@ func IsWebAppInitDataHashValid(data string) (bool, error) {
 
 func GetSecretKeyForWebApp() ([]byte, error) {
 	token := utils.GetTelegramBotToken()
-	secret := "WebAppData"
-	return utils.CreateHmac(token, []byte(secret))
+	return utils.CreateHmac(token, []byte(utils.GetTelegramWebAppSecretKey()))
 }
