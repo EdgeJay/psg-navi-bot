@@ -12,9 +12,7 @@ build-frontend:
 build-backend:
 	cd ./bot-backend && GOOS=linux GOARCH=amd64 go build -v -a -o build/dev/bin/app . && \
 		mkdir -p build/dev/bin/templates && \
-		cp ./templates/start.html build/dev/bin/templates/start.html && \
-		cp ../bot-frontend/dist/index.html build/dev/bin/templates/ && \
-		mv build/dev/bin/templates/index.html build/dev/bin/templates/menu.html
+		cp ./templates/start.html build/dev/bin/templates/start.html
 
 init:
 	terraform -chdir=infra/dev init
