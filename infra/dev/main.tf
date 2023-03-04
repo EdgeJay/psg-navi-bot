@@ -56,6 +56,10 @@ variable "telegram_webapp_secret_key" {
   description = "Secret key for Telegram web app for validating initData"
 }
 
+variable "menu_session_checksum_secret" {
+  description = "Secret key for creating checksum of menu session data"
+}
+
 locals {
   app_id = "${lower(var.app_name)}-${lower(var.app_env)}-${random_id.unique_suffix.hex}"
 }

@@ -46,6 +46,10 @@ func GetTelegramWebAppSecretKey() string {
 	return os.Getenv("telegram_webapp_secret_key")
 }
 
+func GetMenuSessionChecksumSecret() string {
+	return os.Getenv("menu_session_checksum_secret")
+}
+
 func GetLambdaInvokeUrl() string {
 	return os.Getenv("lambda_invoke_url")
 }

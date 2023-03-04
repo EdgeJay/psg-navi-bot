@@ -11,8 +11,6 @@ import (
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 )
 
-const ChecksumSecret = "MenuSessionChecksum"
-
 type MenuSession struct {
 	ID        string
 	StartTime time.Time
@@ -50,7 +48,7 @@ func NewMenuSession() (*MenuSession, error) {
 func (m *MenuSession) createChecksum() (string, error) {
 	return utils.CreateHmacHexString(
 		fmt.Sprintf("%s.%d", m.ID, m.StartTime.UnixNano()),
-		[]byte(ChecksumSecret),
+		[]byte(utils.GetMenuSessionChecksumSecret()),
 	)
 }
 
