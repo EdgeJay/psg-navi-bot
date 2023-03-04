@@ -11,6 +11,12 @@
     const csrfToken = $appInfo.val;
     fetchFileRequestsPromise = fileRequests.fetchAll(csrfToken);
   });
+
+  function titleClickHandler(url: string) {
+    return function handler() {
+      window.Telegram.WebApp.openLink(url);
+    }
+  }
 </script>
 
 <section>
@@ -30,7 +36,7 @@
         {:then _} 
           {#each $fileRequests as req}
             <tr>
-              <td><a href="{req.url}">{req.title}</a></td>
+              <td><a href="{req.url}" on:click|preventDefault={titleClickHandler(req.url)}>{req.title}</a></td>
               <td>{req.formattedCreatedOn}</td>
               <td>{req.fileCount}</td>
               <td></td>
