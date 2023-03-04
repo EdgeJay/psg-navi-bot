@@ -21,3 +21,15 @@ func CreateHmacHexString(data string, secret []byte) (string, error) {
 	}
 	return hex.EncodeToString(hmac), nil
 }
+
+func CreateAppVersionHmac() (string, error) {
+	return CreateHmacHexString(GetAppVersion(), []byte(GetAppVersionSecret()))
+}
+
+func VerifyAppVersionHmac(hashed string) bool {
+	expected, err := CreateAppVersionHmac()
+	if err != nil {
+		return false
+	}
+	return hashed == expected
+}
