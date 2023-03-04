@@ -1,41 +1,19 @@
 package middlewares
 
 import (
-	"errors"
-	"log"
 	"net/http"
 
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/auth"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/cookies"
-	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 	"github.com/gin-gonic/gin"
 )
 
-const PsgNaviBotSessionName = "psg_navi_bot_session"
-
 func getSessionCookie(c *gin.Context) (*cookies.MenuSession, error) {
-	str, err := c.Cookie(PsgNaviBotSessionName)
+	str, err := c.Cookie(auth.PsgNaviBotSessionName)
 	if err != nil {
 		return nil, err
 	}
-
-	menuSession := cookies.MenuSession{}
-	if err := menuSession.ParseJson(str); err != nil {
-		return nil, err
-	}
-
-	// check cookie expiry
-	if menuSession.IsExpired(utils.GetCookieDuration()) {
-		log.Println("Session expired")
-		return nil, errors.New("session expired")
-	}
-
-	// check cookie checksum validity
-	if !menuSession.IsChecksumValid() {
-		log.Println("Invalid session checksum")
-		return nil, errors.New("session checksum invalid")
-	}
-
-	return &menuSession, nil
+	return auth.ParseCookieStringToMenuSession(str)
 }
 
 func StartSession(c *gin.Context) {
@@ -44,61 +22,24 @@ func StartSession(c *gin.Context) {
 	menuSession, err := getSessionCookie(c)
 
 	if err != nil {
-		// create new cookie for session
-		// get domain for cookie
-		domain, err := utils.GetLambdaInvokeUrlDomain()
+		// create and set new cookie for session
+		sess, err := auth.StartMenuSession(c, auth.PsgNaviBotSessionName)
+
 		if err != nil {
 			c.Abort()
 			c.JSON(
 				http.StatusInternalServerError,
 				gin.H{
-					"error":   "Unable to fetch bot menu",
+					"error":   "Unable to start menu session",
 					"details": err.Error(),
 				},
 			)
 			return
 		}
 
-		// create cookie
-		sess, sessErr := cookies.NewMenuSession()
-		if sessErr != nil {
-			c.Abort()
-			c.JSON(
-				http.StatusInternalServerError,
-				gin.H{
-					"error":   "Unable to start bot menu session",
-					"details": sessErr.Error(),
-				},
-			)
-			return
-		}
-
-		// set cookie
-		cookieErr := cookies.SetStrictSameSiteCookie(
-			c,
-			sess.Map(),
-			PsgNaviBotSessionName,
-			"/",
-			domain,
-			utils.GetCookieDuration(),
-			true,
-		)
-
-		if cookieErr != nil {
-			c.Abort()
-			c.JSON(
-				http.StatusInternalServerError,
-				gin.H{
-					"error":   "Unable to set menu session",
-					"details": cookieErr.Error(),
-				},
-			)
-			return
-		}
-
 		// Save into context
-		c.Set(PsgNaviBotSessionName, sess)
+		c.Set(auth.PsgNaviBotSessionName, sess)
 	} else {
-		c.Set(PsgNaviBotSessionName, menuSession)
+		c.Set(auth.PsgNaviBotSessionName, menuSession)
 	}
 }

@@ -3,15 +3,15 @@ package routes
 import (
 	"net/http"
 
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/auth"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/cookies"
-	"github.com/EdgeJay/psg-navi-bot/bot-backend/middlewares"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func MenuStart(c *gin.Context) {
 	// find key in context to prove that session is properly set
-	sess, exists := c.Get(middlewares.PsgNaviBotSessionName)
+	sess, exists := c.Get(auth.PsgNaviBotSessionName)
 
 	if !exists {
 		c.Abort()

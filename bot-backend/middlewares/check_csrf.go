@@ -3,13 +3,14 @@ package middlewares
 import (
 	"net/http"
 
+	"github.com/EdgeJay/psg-navi-bot/bot-backend/auth"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/cookies"
 	"github.com/gin-gonic/gin"
 )
 
 func CheckCsrf(c *gin.Context) {
 	// find key in context to prove that session is properly set
-	sess, exists := c.Get(PsgNaviBotSessionName)
+	sess, exists := c.Get(auth.PsgNaviBotSessionName)
 
 	if !exists {
 		c.Abort()

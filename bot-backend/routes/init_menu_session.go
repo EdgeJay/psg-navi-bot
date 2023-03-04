@@ -9,30 +9,24 @@ import (
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/auth"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/bot"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/cookies"
-	"github.com/EdgeJay/psg-navi-bot/bot-backend/middlewares"
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 )
 
 const CsrfCookieName = "cs"
+
+func getSessionCookie(c *gin.Context) (*cookies.MenuSession, error) {
+	str, err := c.Cookie(auth.PsgNaviBotSessionName)
+	if err != nil {
+		return nil, err
+	}
+	return auth.ParseCookieStringToMenuSession(str)
+}
 
 type InitMenuSessionPayload struct {
 	InitData string `json:"init_data"`
 }
 
 func InitMenuSession(c *gin.Context) {
-	sess, exists := c.Get(middlewares.PsgNaviBotSessionName)
-	if !exists {
-		c.Abort()
-		c.JSON(
-			http.StatusUnauthorized,
-			gin.H{
-				"error": "Missing bot menu session",
-			},
-		)
-		return
-	}
-	menuSession := (sess).(*cookies.MenuSession)
-
 	// get payload
 	var payload InitMenuSessionPayload
 	if err := c.BindJSON(&payload); err != nil {
@@ -86,6 +80,28 @@ func InitMenuSession(c *gin.Context) {
 			},
 		)
 		return
+	}
+
+	var menuSession *cookies.MenuSession
+	// check if existing cookie existed
+	// NOTE: err will be returned if cookie did not exist, already expired or checksum failed
+	if sess, _ := getSessionCookie(c); sess != nil {
+		menuSession = sess
+	} else {
+		// Start session, reate and set new cookie for session
+		if sess, err := auth.StartMenuSession(c, auth.PsgNaviBotSessionName); err != nil {
+			c.Abort()
+			c.JSON(
+				http.StatusInternalServerError,
+				gin.H{
+					"error":   "Unable to start menu session",
+					"details": err.Error(),
+				},
+			)
+			return
+		} else {
+			menuSession = sess
+		}
 	}
 
 	// save jwt token into cookie
