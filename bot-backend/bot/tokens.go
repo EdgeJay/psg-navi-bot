@@ -2,10 +2,12 @@ package bot
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/url"
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/EdgeJay/psg-navi-bot/bot-backend/utils"
 )
@@ -49,6 +51,14 @@ func UnMarshalWebAppInitData(data string) (*WebAppInitData, error) {
 			if err != nil {
 				return nil, err
 			}
+
+			// check if val is within time threshold
+			now := time.Now()
+			authDate := time.Unix(int64(val), 0)
+			if authDate.Add(time.Minute*time.Duration(20)).Unix() < now.Unix() {
+				return nil, fmt.Errorf("auth date expired")
+			}
+
 			result.AuthDate = val
 		} else if strings.Index(item, "hash=") == 0 {
 			result.Hash = arr[1]
