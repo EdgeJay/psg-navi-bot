@@ -5,8 +5,10 @@ interface AppInfo {
   ver: string;
 }
 
+const blankInfo = { val: '', ver: '' };
+
 function createAppInfo() {
-  const { subscribe, set } = writable<AppInfo>();
+  const { subscribe, set } = writable<AppInfo>(blankInfo);
 
   return {
     subscribe,
@@ -16,7 +18,7 @@ function createAppInfo() {
         const appInfo = JSON.parse(decodeURIComponent(data.value)) as AppInfo;
         set(appInfo);
       } else {
-        set({ val: '', ver: '' });
+        set(blankInfo);
       }
     }
   };
