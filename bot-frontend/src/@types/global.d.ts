@@ -19,8 +19,10 @@ interface Window {
   },
   Telegram: {
     WebApp: {
+      initData: string,
       showAlert: (message: string, callback: () => void) => void,
       openLink: (url: string) => void,
+      close: () => void,
     },
   },
 }
