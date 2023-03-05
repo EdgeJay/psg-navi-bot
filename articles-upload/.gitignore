@@ -28,3 +28,6 @@ tmp
 
 # Certs, keys are stored here
 certs
+
+articles/*
+!articles/.gitkeep

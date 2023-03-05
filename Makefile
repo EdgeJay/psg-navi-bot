@@ -35,3 +35,7 @@ destroy:
 clean:
 	rm -rf ./articles-upload/build/dev
 	rm -rf ./bot-backend/build/dev
+
+upload-articles:
+	cd articles-upload/articles && \
+	aws s3 cp . s3://psgnavibot-articles-dev/ --recursive --exclude ".gitkeep"
