@@ -22,10 +22,11 @@ func NewOpenAIClient() *OpenAIClient {
 func (c *OpenAIClient) PerformTextCompletion(prompt string) (string, error) {
 	ctx := context.Background()
 	req := openai.CompletionRequest{
-		Model:       openai.GPT3Davinci,
+		Model:       openai.GPT3TextDavinci003,
 		MaxTokens:   1024,
 		Prompt:      prompt,
 		Temperature: 0,
+		User:        "12edc093-e516-48fa-aa88-d2c3b22ef633",
 	}
 
 	res, err := c.client.CreateCompletion(ctx, req)
