@@ -17,6 +17,7 @@ resource "aws_lambda_function" "articles_upload" {
 
     environment {
       variables = {
+        app_env                  = var.app_env
         uploaded_articles_bucket = var.uploaded_articles_bucket
       }
     }

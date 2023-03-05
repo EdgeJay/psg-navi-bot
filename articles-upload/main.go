@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -10,6 +11,7 @@ import (
 
 	"github.com/EdgeJay/psg-navi-bot/articles-upload/articles"
 	awsUtils "github.com/EdgeJay/psg-navi-bot/articles-upload/aws"
+	"github.com/EdgeJay/psg-navi-bot/articles-upload/openaiutils"
 	"github.com/EdgeJay/psg-navi-bot/articles-upload/sqs"
 )
 
@@ -27,6 +29,22 @@ func parseFile(ch chan *articles.Article, path awsUtils.S3Path) {
 		log.Fatalln("unable to parse file", err)
 	}
 	log.Printf("s3://%s/%s loaded and parsed\n", *path.Bucket, *path.Key)
+
+	ch <- article
+}
+
+func performOpenAIQueryOnArticle(ch chan *articles.Article, article *articles.Article, openaiClient *openaiutils.OpenAIClient) {
+	res, err := openaiClient.PerformTextCompletion(
+		fmt.Sprintf(
+			"%s\n\n%s\n\n%s",
+			article.InputPrompt,
+			article.Content,
+			article.OutputPrompt,
+		),
+	)
+
+	log.Println(res, err)
+
 	ch <- article
 }
 
@@ -43,6 +61,19 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 	for i := 0; i < len(paths); i += 1 {
 		article := <-ch
 		parsedArticles = append(parsedArticles, article)
+	}
+
+	log.Println("All files parsed")
+
+	// Make request to OpenAI
+	openaiClient := openaiutils.NewOpenAIClient()
+	openaiCh := make(chan *articles.Article, len(parsedArticles))
+	for i := 0; i < len(parsedArticles); i += 1 {
+		go performOpenAIQueryOnArticle(openaiCh, parsedArticles[i], openaiClient)
+	}
+
+	for i := 0; i < len(parsedArticles); i += 1 {
+		<-openaiCh
 	}
 
 	log.Println("Handler execution done")
