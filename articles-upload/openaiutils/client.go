@@ -23,9 +23,9 @@ func (c *OpenAIClient) PerformTextCompletion(prompt string) (string, error) {
 	ctx := context.Background()
 	req := openai.CompletionRequest{
 		Model:       openai.GPT3Davinci,
-		MaxTokens:   200,
+		MaxTokens:   1024,
 		Prompt:      prompt,
-		Temperature: 0.5,
+		Temperature: 0,
 	}
 
 	res, err := c.client.CreateCompletion(ctx, req)
