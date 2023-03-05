@@ -1,6 +1,7 @@
 go 1.19
 
 use (
+	./articles-upload
 	./bot-backend
 	./bot-utils
 )

@@ -99,3 +99,43 @@ resource "aws_s3_object" "favicon" {
   acl          = "public-read"
   content_type = "image/x-icon"
 }
+
+# ============ This section onwards is for article ingestion/processing pipeline ============
+
+resource "aws_s3_bucket" "psgnavibot_articles" {
+  bucket = "psgnavibot-articles-dev"
+
+  tags = {
+    environment = "dev"
+  }
+}
+
+resource "aws_s3_bucket_acl" "psgnavibot_articles_acl" {
+  bucket = aws_s3_bucket.psgnavibot_articles.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_versioning" "psgnavibot_articles_versioning" {
+  bucket = aws_s3_bucket.psgnavibot_articles.id
+  versioning_configuration {
+    status = "Disabled"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "psgnavibot_articles_block_public" {
+  bucket = aws_s3_bucket.psgnavibot_articles.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# S3 event filter
+resource "aws_s3_bucket_notification" "psgnavibot_articles_notification" {
+  bucket = aws_s3_bucket.psgnavibot_articles.id
+  queue {
+    queue_arn     = aws_sqs_queue.psgnavibot_articles_uploaded_queue.arn
+    events        = ["s3:ObjectCreated:*"]
+  }
+}

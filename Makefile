@@ -4,7 +4,10 @@ run:
 dev:
 	cd ./bot-backend && app_env=dev app_version=1.0.0 app_version=1.0.0 air
 
-build: clean build-frontend build-backend
+build: clean build-frontend build-backend build-articles-upload
+
+build-articles-upload:
+	cd ./articles-upload && GOOS=linux GOARCH=amd64 go build -v -a -o build/dev/bin/app .
 
 build-frontend:
 	cd ./bot-frontend && npm run build
@@ -30,4 +33,5 @@ destroy:
 	terraform -chdir=infra/dev destroy -var-file=variables.tfvars
 
 clean:
+	rm -rf ./articles-upload/build/dev
 	rm -rf ./bot-backend/build/dev

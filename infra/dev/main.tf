@@ -7,6 +7,11 @@ variable "app_name" {
   default     = "psg-navi-bot-backend"
 }
 
+variable "articles_upload_app_name" {
+  description = "Articles upload application name"
+  default     = "psg-navi-bot-articles-upload"
+}
+
 variable "app_env" {
   description = "Application environment tag"
   default     = "dev"
@@ -62,12 +67,19 @@ variable "menu_session_checksum_secret" {
 
 locals {
   app_id = "${lower(var.app_name)}-${lower(var.app_env)}-${random_id.unique_suffix.hex}"
+  articles_upload_id = "${lower(var.articles_upload_app_name)}-${lower(var.app_env)}-${random_id.unique_suffix.hex}"
 }
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
   source_dir  = "../../bot-backend/build/dev/bin"
   output_path = "../../bot-backend/build/dev/app.zip"
+}
+
+data "archive_file" "lambda_articles_upload_zip" {
+  type        = "zip"
+  source_dir  = "../../articles-upload/build/dev/bin"
+  output_path = "../../articles-upload/build/dev/app.zip"
 }
 
 data "local_file" "rsa_private" {
