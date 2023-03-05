@@ -2,21 +2,16 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 
+	"github.com/EdgeJay/psg-navi-bot/articles-upload/articles"
+	awsUtils "github.com/EdgeJay/psg-navi-bot/articles-upload/aws"
 	"github.com/EdgeJay/psg-navi-bot/articles-upload/sqs"
 )
-
-type MyEvent struct {
-	Name string `json:"name"`
-}
 
 func isRunningInLambda() bool {
 	if lambdaTaskRoot := os.Getenv("LAMBDA_TASK_ROOT"); lambdaTaskRoot != "" {
@@ -25,17 +20,32 @@ func isRunningInLambda() bool {
 	return false
 }
 
-func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
-	for _, message := range sqsEvent.Records {
-		fmt.Printf("The message %s for event source %s = %s \n", message.MessageId, message.EventSource, message.Body)
-
-		var parsed sqs.MessageBody
-		if err := json.NewDecoder(strings.NewReader(message.Body)).Decode(&parsed); err != nil {
-			log.Fatalln(err)
-		}
-
-		log.Printf("object s3://%s/%s added\n", parsed.Records[0].S3.Bucket.Name, parsed.Records[0].S3.Object.Key)
+func parseFile(ch chan *articles.Article, path awsUtils.S3Path) {
+	reader := articles.NewReader(path)
+	article, err := reader.LoadAndParseFile()
+	if err != nil {
+		log.Fatalln("unable to parse file", err)
 	}
+	log.Printf("s3://%s/%s loaded and parsed\n", *path.Bucket, *path.Key)
+	ch <- article
+}
+
+func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
+	parsedArticles := make([]*articles.Article, 0)
+	parser := sqs.NewRecordsParser(sqsEvent.Records)
+	paths := parser.GetS3Paths()
+	ch := make(chan *articles.Article, len(paths))
+
+	for _, path := range paths {
+		go parseFile(ch, path)
+	}
+
+	for i := 0; i < len(paths); i += 1 {
+		article := <-ch
+		parsedArticles = append(parsedArticles, article)
+	}
+
+	log.Println("Handler execution done")
 
 	return nil
 }
