@@ -1,7 +1,7 @@
 package articles
 
 import (
-	"io/ioutil"
+	"io"
 
 	awsUtils "github.com/EdgeJay/psg-navi-bot/articles-upload/aws"
 )
@@ -24,7 +24,7 @@ func (r *Reader) LoadAndParseFile() (*Article, error) {
 		return nil, err
 	}
 
-	b, readErr := ioutil.ReadAll(obj.Body)
+	b, readErr := io.ReadAll(obj.Body)
 	if readErr != nil {
 		return nil, readErr
 	}
