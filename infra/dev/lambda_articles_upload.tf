@@ -14,6 +14,7 @@ resource "aws_lambda_function" "articles_upload" {
     source_code_hash = data.archive_file.lambda_articles_upload_zip.output_base64sha256
     runtime          = "go1.x"
     role             = aws_iam_role.lambda_exec_articles_upload.arn
+    timeout          = 120
 
     environment {
       variables = {
