@@ -103,7 +103,7 @@ resource "aws_s3_object" "favicon" {
 # ============ This section onwards is for article ingestion/processing pipeline ============
 
 resource "aws_s3_bucket" "psgnavibot_articles" {
-  bucket = "psgnavibot-articles-dev"
+  bucket = "${var.uploaded_articles_bucket}"
 
   tags = {
     environment = "dev"
