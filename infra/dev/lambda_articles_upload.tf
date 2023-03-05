@@ -75,6 +75,17 @@ resource "aws_iam_policy" "lambda_exec_articles_upload_policy" {
       ],
       "Effect": "Allow",
       "Resource": "*"
+    },
+    {
+      "Action": [
+        "ssm:GetParameter",
+        "ssm:GetParameters",
+        "ssm:GetParametersByPath"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_ssm_parameter.dev_openai_api_key.arn}"
+      ]
     }
   ]
 }
