@@ -16,9 +16,9 @@ resource "aws_lambda_function" "articles_upload" {
     role             = aws_iam_role.lambda_exec_articles_upload.arn
 
     environment {
-        variables {
-            uploaded_articles_bucket = var.uploaded_articles_bucket
-        }
+      variables = {
+        uploaded_articles_bucket = var.uploaded_articles_bucket
+      }
     }
 }
 
@@ -52,10 +52,11 @@ resource "aws_iam_policy" "lambda_exec_articles_upload_policy" {
     {
       "Action": [
         "s3:GetObject",
-        "s3:PutObject"
+        "s3:PutObject",
+        "s3:ListBucket"
       ],
       "Effect": "Allow",
-      "Resource": "${aws_s3_bucket.psgnavibot_articles.arn}"
+      "Resource": "${aws_s3_bucket.psgnavibot_articles.arn}/*"
     },
     {
       "Action": [
